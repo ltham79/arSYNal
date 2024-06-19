@@ -1,0 +1,104 @@
+Introduction to Cewl
+CeWL, a custom wordlist generator written in Ruby, is designed to extract keywords from a specified URL to a given depth. These keywords serve as potential entries for password-cracking tools such as John the Ripper, Medusa, and WFuzz.
+
+Additionally, CeWL offers a companion command-line application called FAB, leveraging similar metadata extraction techniques to generate lists of authors or producers from pre-downloaded files. The information extraction algorithms employed by CeWL and FAB contribute to the creation of effective wordlists for various security purposes.
+
+CeWL, bundled with Kali Linux, simplifies word and phrase extraction from target web pages. This robust tool swiftly scrapes website web servers with ease.
+
+To explore its full range of options and descriptions, launch the Kali Linux terminal and type “cewl -h”.
+
+Syntax: cewl <url> [options]
+
+cewl -h
+
+General Options :
+
+-h, –help: Show help.
+
+-k, –keep: Keep the downloaded file.
+
+-d <x>, –depth <x>: Depth to spider to, default 2.
+
+-m, –min_word_length: Minimum word length, default 3.
+
+-o, –offsite: Let the spider visit other sites.
+
+-w, –write: Write the output to the file.
+
+-u, –ua <agent>: User agent to send.
+
+-n, –no-words: Don’t output the wordlist.
+
+–with-numbers: Accept words with numbers in as well as just letters
+
+-a, –meta: include meta data.
+
+–meta_file file: Output file for Meta data.
+
+-e, –email: Include email addresses.
+
+–email_file <file>: Output file for email addresses.
+
+-c, –count: Show the count for each word found.
+
+-v, –verbose: Verbose.
+
+–debug: Extra debug information
+
+Authentication
+
+–auth_type: Digest or basic.
+
+–auth_user: Authentication username.
+
+–auth_pass: Authentication password.
+
+Proxy Support
+
+–proxy_host: Proxy host.
+
+–proxy_port: Proxy port, default 8080.
+
+–proxy_username: Username for proxy, if required.
+
+–proxy_password: Password for proxy, if required.
+
+Default Procedure
+Use the following command to generate a list of words that will spider the given URL to a specified depth and we can use it as a directory for cracking the passwords.
+
+cewl http://www.vulnweb.com
+
+Store this wordlist in a file
+For record-keeping, efficiency, and readability, use the -w option to save the generated wordlist in a text file. This ensures easy access and organization of the collected data.
+
+cewl http://www.vulnweb.com -w dict.txt
+
+Retrieval of Emails from the website
+To extract emails from the website, employ the -e option, while the -n option conceals the lists generated during the website crawl. As illustrated in the attached screenshot, it successfully identified one email address from the specified website.
+
+cewl https://digi.ninja/contact.php -e -n
+
+To count the number of words repeated on the website
+If you want to count the number of times a word is repeated on a website, then use the -c option that will enable the count parameter.
+
+cewl  http://www.vulnweb.com -c
+
+Increase Spider depth
+You can use -d option with the depth number to activate depth parameter for more quick and intense crawling so that a large list of words is created. The depth level is set to 2 as default.
+
+cewl http://vulnweb.com -d 3
+
+Verbose Mode
+The inclusion of the -v option activates verbose mode, providing an extended output of website crawling results. This enables the retrieval of comprehensive details from the website during the crawling process.
+
+cewl http://vulnweb.com -v
+
+Alphanumeric Wordlist
+Sometimes it may happen that you may need an alpha-numeric wordlist that you can use –the with-numbers option to get an alpha-numeric wordlist.
+
+cewl http://testphp.vulnweb.com/artists.php --with-numbers
+
+Lowercase all parsed words
+When you need the keywords to be generated in lowercase for that you can use the –lowercase option to generate the words in lowercase.
+
+cewl http://testphp.vulnweb.com/artists.php --lowercase

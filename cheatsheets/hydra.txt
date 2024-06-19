@@ -1,0 +1,263 @@
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or 
+secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Disclaimer
+We want to be absolutely clear on the importance of adhering to applicable laws regarding web application vulnerability scanning and exploitation. Before conducting any form of ethical hacking or penetration testing on a system, ensure that you have obtained explicit permission from the system or network owner.
+
+Unauthorized hacking or scanning may seem trivial, but it can carry severe legal consequences, including fines or imprisonment, depending on your jurisdiction. Do not do it. Some of the laws that govern this activity include:
+
+The Computer Fraud and Abuse Act (United States)
+Sections 184, 342.1, 380, and 430 of the Criminal Code of Canada (Canada)
+Computer Misuse Act 1990 (England)
+Sec. 202a and 202b of the German Criminal Code (Germany)
+Information Technology Act Sec. 43 and 66 (India)
+The Act on the Prohibition of Unauthorized Computer Access (Japan)
+If you doubt whether you’re acting in the clear, consult the agreement or scope of your authorized activities with a specific entity or review the code of conduct or disclosure guidelines with any of the bug bounty programs mentioned at the end of this article.
+
+Hydra is a tool to guess/crack valid login/password pairs.
+Licensed under AGPL v3.0. The newest version is always available at;
+https://github.com/vanhauser-thc/thc-hydra
+Please don't use in military or secret service organizations, or for illegal
+purposes. (This is a wish and non-binding - most such people do not care about
+laws and ethics anyway - and tell themselves they are one of the good ones.)
+
+
+Syntax: 
+hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-e nsr] [-o FILE] [-t TASKS] [-M FILE [-T TASKS]] [-w TIME] [-W TIME] [-f] [-s PORT] [-x MIN:MAX:CHARSET] [-c TIME] [-ISOuvVd46] [-m MODULE_OPT] [service://server[:PORT][/OPT]]
+
+
+hydra -h
+
+Hydra also supports environment variables such as that of an HTTP proxy.
+
+To learn about the specific parameters accompanying a service supported by Hydra, use the following command:
+
+hydra <service> -U
+
+
+Options:
+  -R        restore a previous aborted/crashed session
+  -I        ignore an existing restore file (don't wait 10 seconds)
+  -S        perform an SSL connect
+  -s PORT   if the service is on a different default port, define it here
+  -l LOGIN or -L FILE  login with LOGIN name, or load several logins from FILE
+  -p PASS  or -P FILE  try password PASS, or load several passwords from FILE
+  -x MIN:MAX:CHARSET  password bruteforce generation, type "-x -h" to get help
+  -y        disable use of symbols in bruteforce, see above
+  -r        use a non-random shuffling method for option -x
+  -e nsr    try "n" null password, "s" login as pass and/or "r" reversed login
+  -u        loop around users, not passwords (effective! implied with -x)
+  -C FILE   colon separated "login:pass" format, instead of -L/-P options
+  -M FILE   list of servers to attack, one entry per line, ':' to specify port
+  -o FILE   write found login/password pairs to FILE instead of stdout
+  -b FORMAT specify the format for the -o FILE: text(default), json, jsonv1
+  -f / -F   exit when a login/pass pair is found (-M: -f per host, -F global)
+  -t TASKS  run TASKS number of connects in parallel per target (default: 16)
+  -T TASKS  run TASKS connects in parallel overall (for -M, default: 64)
+  -w / -W TIME  wait time for a response (32) / between connects per thread (0)
+  -c TIME   wait time per login attempt over all threads (enforces -t 1)
+  -4 / -6   use IPv4 (default) / IPv6 addresses (put always in [] also in -M)
+  -v / -V / -d  verbose mode / show login+pass for each attempt / debug mode
+  -O        use old SSL v2 and v3
+  -K        do not redo failed attempts (good for -M mass scanning)
+  -q        do not print messages about connection errors
+  -U        service module usage details
+  -m OPT    options specific for a module, see -U output for information
+  -h        more command line options (COMPLETE HELP)
+  server    the target: DNS, IP or 192.168.0.0/24 (this OR the -M option)
+  service   the service to crack (see below for supported protocols)
+  OPT       some service modules support additional input (-U for module help)
+
+Supported services: 
+adam6500 asterisk cisco cisco-enable cobaltstrike cvs firebird ftp[s] http[s]-{head|get|post} 
+http[s]-{get|post}-form http-proxy http-proxy-urlenum icq imap[s] irc ldap2[s] ldap3[-{cram|digest}md5][s] 
+memcached mongodb mssql mysql nntp oracle-listener oracle-sid pcanywhere pcnfs pop3[s] postgres radmin2 rdp 
+redis rexec rlogin rpcap rsh rtsp s7-300 sip smb smtp[s] smtp-enum snmp socks5 ssh sshkey svn teamspeak 
+telnet[s] vmauthd vnc xmpp
+
+
+Hydra Password Cracking Cheetsheet
+
+The following table uses the $ip variable which can be set with the following command:
+
+export ip 10.10.10.1
+
+Hydra brute force against SNMP:
+hydra -P password-file.txt -v $ip snmp	
+
+Hydra FTP known user and rockyou password list:
+hydra -t 1 -l admin -P /usr/share/wordlists/rockyou.txt -vV $ip ftp
+
+Hydra SSH using list of users and passwords:
+hydra -v -V -u -L users.txt -P passwords.txt -t 1 -u $ip ssh
+
+Hydra SSH using a known password and a username list:	
+hydra -v -V -u -L users.txt -p "" -t 1 -u $ip ssh
+
+Hydra SSH Against Known username on port 22:	
+hydra $ip -s 22 ssh -l -P big_wordlist.txt
+
+Hydra POP3 Brute Force:	
+hydra -l USERNAME -P /usr/share/wordlistsnmap.lst -f $ip pop3 -V
+
+Hydra SMTP Brute Force:	
+hydra -P /usr/share/wordlistsnmap.lst $ip smtp -V
+
+Hydra attack http get 401 login with a dictionary:	
+hydra -L ./webapp.txt -P ./webapp.txt $ip http-get /admin
+
+Hydra attack Windows Remote Desktop with rockyou:	
+hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://$ip
+
+Hydra brute force SMB user with rockyou:	
+hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt $ip smb
+
+Hydra brute force a Wordpress admin login:	
+hydra -l admin -P ./passwordlist.txt $ip -V http-form-post '/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log In&testcookie=1:S=Location'	
+
+SMB Brute Forcing:
+hydra -L usernames.txt -P passwords.txt $ip smb -V -f
+
+LDAP Brute Forcing:	
+hydra -L users.txt -P passwords.txt $ip ldap2 -V -f
+
+
+
+INDEPTH USAGE:
+
+Here’s the syntax to specify a username and password for a brute-force attack against a single service on a server:
+
+hydra -l <username> -p <password> <server> <service>
+
+
+An alternative syntax for the server and service portion of the Hydra command is:
+
+hydra -l <username> -p <password> <service>://<server>
+
+
+If you want Hydra to choose usernames and passwords from given lists to conduct a dictionary attack, use the following command syntax:
+
+hydra -L <username_list_file.ext> -P <password_list_file.ext> <server> <service>
+
+
+Sometimes you may be familiar with certain username and password pairings on your server. You may include them in a separate text file, each line formatted as username:password, and use the -C (combo entries) option to speed up the cracking:
+
+hydra -C <username_password_pairings_file.ext> <server> <service>
+
+
+To attack multiple servers, save the server IP addresses into a file and use the -M command syntax below:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] -M <server_IP_addresses_file.ext> <service>
+
+
+If you want Hydra to quit after finding the first username/password pair, use the -F option:
+
+Use the syntax below if the service you’ve chosen has a non-default port number:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] <server> <service> -F
+
+
+Use the syntax below if the service you’ve chosen has a non-default port number:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] <server> -s <new_port_number> <service>
+
+
+Hydra runs on a CPU and supports multithreading—testing multiple logins simultaneously. Use the -t flag below to speed up your password cracking. The default number of threads is 16:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] -t <number_of_threads> <server> <service>
+
+
+To save the output to a file, refer to this command syntax:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] -o <output_file.ext> <server> <service>
+
+
+If you want to toggle verbose mode, which displays the username/password pair for each brute force attempt, use the -V flag:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] <server> <service> -V
+
+
+The -d flag, which stands for “debug mode,” shows the complete details of the Hydra attack:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] <server> <service> -d
+
+
+To check for three trivial passwords, use the -e nsr option, where n stands for a null password (empty string), s means that the password is the same as the username, and r refers to the password being the username reversed:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] <server> <service> -e nsr
+
+
+Your Hydra session may face interruptions for unexpected reasons. Fear not; Hydra has a built-in resumption function callable with the -R option:
+
+hydra -R
+
+
+This command is only valid if you have previously executed one or more Hydra commands above which didn’t reach completion.
+
+
+Consider generating passwords of a certain format on the fly to test against a service. The syntax is:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] -x min:max:charset <server> <service>
+
+Explanation of the parameter min:max:charset:
+
+min specifies the minimum number of characters in each password.
+max specifies the maximum number of characters in each password.  
+charset is a string. This string can contain 1 for numbers, a for lowercase, and A for uppercase characters. To include additional characters, append them to charset at the end. For example, if the charset is 5:7:a1#$, then the command will generate passwords of length 5 to 7 and contain lowercase letters, numbers, and any number of # and $ characters.
+
+Brute Forcing a Website Login
+Suppose you want to log in to a website server but need to know the username, password, or both. You can use Hydra to barge into the POST form, where you find the username and password fields and their id/name attributes in the HTTP source.
+
+The command syntax is (assuming the id/name attributes of the username and password fields are userField and passwordField, respectively):
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] <server> http-post-form "/path/to/web/login/index.php:userField=^USER^:passwordField=^PASS^"
+
+Notice the additional string argument at the end, specifying the portion in the address bar immediately after the server hostname or IP address. For more information on the creation of that string, use the command below
+
+hydra http-post-form -U
+
+In the demonstration below, we use DVWA, a web app designed for neophyte pentesters. According to the developer console, its vulnerable login username and password fields have username and password as their name attributes, respectively.
+Notice the URL is http://127.0.0.0/DVWA/vulnerabilities/brute/index.php, and so the command syntax for brute-forcing this DVWA login becomes:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] 127.0.0.1 http-post-form "/DVWA/vulnerabilities/brute/index.php:userField=^USER^:passwordField=^PASS^"
+
+Now we crack this web app with Hydra and look at the passwords we’ve found for a single username.
+As an exercise, you can use Hydra to brute force website logins on vulnerable virtual machines like Mr. Robot (VulnHub).
+
+
+Brute Forcing SSH
+SSH (short for “Secure Shell” or “Secure Socket Shell”) is a network protocol for accessing network services securely over unsecured networks. It includes the suite of utilities implementing it, such as:
+
+ssh-keygen: for creating new authentication key pairs for SSH;
+SCP (Secure Copy Protocol): for copying files between hosts on a network;
+SFTP (Secure File Transfer Protocol): for sending and receiving files. It’s an SSH-secured version of FTP (File Transfer Protocol), and it has replaced FTP and FTPS (FTP Secure) as the preferred mechanism for file sharing over the Internet.
+An SSH server, by default, listens for connections on the standard Transmission Control Protocol (TCP) port 22. Your applications may listen for SSH connections on other ports.
+
+SSH lets you securely manage remote systems and applications, such as logging in to another computer over a network, executing commands, and moving files from one computer to another. An advanced SSH functionality is the creation of secure tunnels to run other application protocols remotely.
+
+The command syntax is:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] <server> ssh
+
+Here is an example of using Hydra on the VulnHub box Lampião to brute force an SSH login:
+(We guessed the username is “tiago” because the developer’s first name is Tiago and created a password list from text on the target’s website using CEWL - another useful tool )
+
+
+Brute Forcing FTP
+FTP (File Transfer Protocol) is a client-server protocol for sending and receiving files between computers over Transmission Control Protocol/Internet Protocol (TCP/IP) connections. Its TLS/SSL-secured counterpart is FTP over TLS/SSL (FTPS).
+
+FTP consists of two channels between the client and server: a command channel (default port 21) for controlling the conversation and a data channel (default port 20) for transmitting file content. For FTPS, the default control and data ports are 990 and 989, respectively.
+
+Here’s how a typical FTP transfer works:
+
+A user typically needs to log on to the FTP server (unless it’s an anonymous FTP server which requires no login).
+When the user requests to download a file, the client initiates a conversation with the server.
+A connected FTP client can add, amend, download, and delete files on a server.
+The command syntax is:
+
+hydra [-l <username> | -L <username_list_file.ext>] [-p <password> | -P <password_list_file.ext>] <server> ftp
+
+For further practice, you can brute force with Hydra on VulnHub box Chili 1.
+
+
+https://www.stationx.net/how-to-use-hydra/

@@ -1,0 +1,818 @@
+medusa
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+ALERT: Host information must be supplied.
+
+Syntax: Medusa [-h host|-H file] [-u username|-U file] [-p password|-P file] [-C file] -M module [OPT]
+  -h [TEXT]    : Target hostname or IP address
+  -H [FILE]    : File containing target hostnames or IP addresses
+  -u [TEXT]    : Username to test
+  -U [FILE]    : File containing usernames to test
+  -p [TEXT]    : Password to test
+  -P [FILE]    : File containing passwords to test
+  -C [FILE]    : File containing combo entries. See README for more information.
+  -O [FILE]    : File to append log information to
+  -e [n/s/ns]  : Additional password checks ([n] No Password, [s] Password = Username)
+  -M [TEXT]    : Name of the module to execute (without the .mod extension)
+  -m [TEXT]    : Parameter to pass to the module. This can be passed multiple times with a
+                 different parameter each time and they will all be sent to the module (i.e.
+                 -m Param1 -m Param2, etc.)
+  -d           : Dump all known modules
+  -n [NUM]     : Use for non-default TCP port number
+  -s           : Enable SSL
+  -g [NUM]     : Give up after trying to connect for NUM seconds (default 3)
+  -r [NUM]     : Sleep NUM seconds between retry attempts (default 3)
+  -R [NUM]     : Attempt NUM retries before giving up. The total number of attempts will be NUM + 1.
+  -c [NUM]     : Time to wait in usec to verify socket is available (default 500 usec).
+  -t [NUM]     : Total number of logins to be tested concurrently
+  -T [NUM]     : Total number of hosts to be tested concurrently
+  -L           : Parallelize logins using one username per thread. The default is to process
+                 the entire username before proceeding.
+  -f           : Stop scanning host after first valid username/password found.
+  -F           : Stop audit after first valid username/password found on any host.
+  -b           : Suppress startup banner
+  -q           : Display module's usage information
+  -v [NUM]     : Verbose level [0 - 6 (more)]
+  -w [NUM]     : Error debug level [0 - 10 (more)]
+  -V           : Display version
+  -Z [TEXT]    : Resume scan based on map of previous scan
+
+medusa -d
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+  Available modules in "." :
+
+  Available modules in "/usr/lib/x86_64-linux-gnu/medusa/modules" :
+    + cvs.mod : Brute force module for CVS sessions : version 2.0
+    + ftp.mod : Brute force module for FTP/FTPS sessions : version 2.1
+    + http.mod : Brute force module for HTTP : version 2.1
+    + imap.mod : Brute force module for IMAP sessions : version 2.0
+    + mssql.mod : Brute force module for M$-SQL sessions : version 2.0
+    + mysql.mod : Brute force module for MySQL sessions : version 2.0
+    + nntp.mod : Brute force module for NNTP sessions : version 2.0
+    + pcanywhere.mod : Brute force module for PcAnywhere sessions : version 2.0
+    + pop3.mod : Brute force module for POP3 sessions : version 2.0
+    + postgres.mod : Brute force module for PostgreSQL sessions : version 2.0
+    + rexec.mod : Brute force module for REXEC sessions : version 2.0
+    + rlogin.mod : Brute force module for RLOGIN sessions : version 2.0
+    + rsh.mod : Brute force module for RSH sessions : version 2.0
+    + smbnt.mod : Brute force module for SMB (LM/NTLM/LMv2/NTLMv2) sessions : version 2.1
+    + smtp-vrfy.mod : Brute force module for verifying SMTP accounts (VRFY/EXPN/RCPT TO) : version 2.1
+    + smtp.mod : Brute force module for SMTP Authentication with TLS : version 2.0
+    + snmp.mod : Brute force module for SNMP Community Strings : version 2.1
+    + ssh.mod : Brute force module for SSH v2 sessions : version 2.1
+    + svn.mod : Brute force module for Subversion sessions : version 2.1
+    + telnet.mod : Brute force module for telnet sessions : version 2.0
+    + vmauthd.mod : Brute force module for the VMware Authentication Daemon : version 2.0
+    + vnc.mod : Brute force module for VNC sessions : version 2.1
+    + web-form.mod : Brute force module for web forms : version 2.1
+    + wrapper.mod : Generic Wrapper Module : version 2.0
+
+
+Display specific options for a given module:
+
+medusa -M cvs -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+cvs.mod (2.0) JoMo-Kun <jmk@foofus.net> :: Brute force module for CVS sessions
+The CVS module tests accounts against the CVS version control system via the pserver protocol.
+
+The module has a single option, DIR. This allows the user to specify the target CVSROOT path. For example, :pserver:USER@HOST:/SOME_DIR. If the option is not set, the default behaviour is to use /root.
+
+Available module options:
+  DIR:?
+    Sets target directory name. If left unset, the default is "/root"
+
+  Usage example: "-M cvs -m DIR:/some_project"
+
+
+
+medusa -M ftp -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+ftp.mod (2.1) pMonkey <pmonkey@foofus.net> :: Brute force module for FTP/FTPS sessions
+The FTP module tests accounts against the FTP and FTPS services. This includes both Explicit FTPS (AUTH TLS Mode as defined in RFC 4217) and Implicit (FTP over SSL (990/tcp)).
+
+Available module options:
+MODE:? (NORMAL*, EXPLICIT, IMPLICIT)
+
+  EXPLICIT: AUTH TLS Mode as defined in RFC 4217
+     Explicit FTPS (FTP/SSL) connects to a FTP service in the clear. Prior to
+     sending any credentials, however, an "AUTH TLS" command is issued and a
+     SSL session is negotiated.
+
+  IMPLICIT: FTP over SSL (990/tcp)
+     Implicit FTPS requires a SSL handshake to be performed before any FTP
+     commands are sent. This service typically resides on tcp/990. If the user
+     specifies this option or uses the "-s" (SSL) option, the module will
+     default to this mode and tcp/990.
+
+  NORMAL
+     The default behaviour if no MODE is specified. Authentication is attempted
+     in the clear. If the server requests encryption for the given user,
+     Explicit FTPS is utilized.
+
+
+Example Usage:
+    medusa -M ftp -h host -u username -p password
+    medusa -M ftp -s -h host -u username -p password
+    medusa -M ftp -m MODE:EXPLICIT -h host -u username -p password
+
+(*) Default value
+
+
+
+medusa -M http -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+http.mod (2.1) fizzgig <fizzgig@foofus.net> :: Brute force module for HTTP
+The HTTP module tests accounts against HTTP/HTTPS services using BASIC-AUTH, integrated windows authentication (NTLM) and digest (MD5 and MD5-sess).
+
+Available module options:
+  USER-AGENT:? (User-Agent. Default: Mozilla/1.22 (compatible; MSIE 10.0; Windows 3.1))
+  DIR:? (Target directory. Default "/")
+  AUTH:? (Authentication Type (BASIC/DIGEST/NTLM). Default: automatic)
+  DOMAIN:? [optional]
+  CUSTOM-HEADER:?    Additional HTTP header.
+                     More headers can be defined by using this option several times.
+
+Usage example: "-M http -m USER-AGENT:"g3rg3 gerg" -m DIR:exchange/"
+Usage example: "-M http -m CUSTOM-HEADER:"Cookie: SMCHALLENGE=YES"
+
+Note: The default behavior of NTLM authentication is to use the server supplied
+domain name. In order to target local accounts, and not domain, use the DOMAIN
+option to reference the local system: "-m DOMAIN:127.0.0.1".
+
+
+
+medusa -M imap -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+imap.mod (2.0) pMonkey <pmonkey@foofus.net> :: Brute force module for IMAP sessions
+The IMAP module tests accounts against the IMAP service. This module supports both imap (143) and imaps (993). The IMAP module asks for the server's capabilities and then does either a LOGIN or an AUTHENTICATE PLAIN, depending on its response.
+
+Available module options:
+  TAG:? (Default: gerg)
+  AUTH:? (Authentication Type (LOGIN/PLAIN/NTLM). Default: automatic)
+  DOMAIN:? [optional]
+
+Usage example: "-M imap -m TAG:A0001 -m AUTH:PLAIN
+
+The DOMAIN option should supply the specified domain appropriately,
+regardless of authentication type. The domain can also be supplied
+via the username field, but the format appears to differ by auth type.
+
+Example 1: NTLM authentication with DOMAIN option
+   "medusa -M imap -m AUTH:NTLM -m DOMAIN:FOODOM -h host -u foo -p bar"
+
+Example 2: NTLM authentication with domain via username
+   "medusa -M imap -m AUTH:NTLM -h host -u foo@domain -p bar"
+
+* If no domain is specified when using NTLM authentication, the server
+supplied value will be used.
+
+Example 3: LOGIN authentication with domain via username
+   "medusa -M imap -m AUTH:LOGIN -h host -u 'domain\\foo' -p bar"
+
+
+
+medusa -M mssql -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+mssql.mod (2.0) JoMo-Kun <jmk@foofus.net> :: Brute force module for M$-SQL sessions
+The MSSQL module tests accounts against Microsoft MS-SQL service.
+
+The MSSQL module will auto-detect the TCP ports used by the SQL server instances on the remote host. This is accomplished via a "SQL Ping" UDP request. If multiple instances are present on the host, only the first will be tested. Any additional instances will be reported and their respective TCP port will be noted. The auto-detection can be over-ridden by specifying a port via the Medusa "-n" option.
+
+NOTE: MS-SQL Developer Edition or MSDE's concurrent workload governor limits you
+      to no more than five concurrent connections to the server at any one time.
+
+
+
+medusa -M mysql -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+mysql.mod (2.0) JoMo-Kun <jmk@foofus.net> :: Brute force module for MySQL sessions
+The MySQL module tests accounts against the MySQL service.
+
+In addition to normal password brute force attempts, this module supports "pass-the-hash" abilities for older MySQL (pre-4.1) hashes. The older MySQL pre-4.1 authentication scheme is vulnerable to a pass-the-hash authentication attack. Utilizing the old-style hashes gathered from a MySQL database, a user can use Medusa to verify their validity on other servers. A modified MySQL client can also be use to connect to located services directly utilizing a valid hash.
+
+Available module options:
+  PASS:?  (PASSWORD*, HASH)
+    PASSWORD: Use normal password.
+    HASH:     Use a hash rather than a password. (non-SHA1 hashes only)
+
+(*) Default value
+
+Usage examples:
+
+1: Normal boring check...
+    medusa -M mysql -h somehost -u someuser -p somepassword
+
+2: Using an old-style MySQL hash...
+    medusa -M mysql -h somehost -U users.txt -p 39b52a209cf03d62 -m PASS:HASH
+
+
+
+medusa -M nntp -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+nntp.mod (2.0) JoMo-Kun <jmk@foofus.net> :: Brute force module for NNTP sessions
+The NNTP module tests accounts against the Network News Transfer Protocol via AUTHINFO.
+
+  Usage example: "-M nntp -U accounts.txt -p password"
+
+
+
+medusa -M pcanywhere -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+pcanywhere.mod (2.0) JoMo-Kun <jmk@foofus.net> :: Brute force module for PcAnywhere sessions
+The PcAnywhere module tests accounts against the Symantec PcAnywhere service.
+
+Module based on packet captures from Server Version 10.5.1 and Client 10.0.2.
+PCA Authentication Methods:
+   ADS (Active Directory Services) [1]
+   FTP [2]
+   HTTP [2]
+   HTTPS [2]
+   Microsoft LDAP [2]
+   Netscape LDAP [2]
+   Novell LDAP [2]
+   NT [1]
+   pcAnywhere [1]
+   Windows [3]
+
+[1] Verified working
+[2] Untested
+[3] Verified to work when PcAnywhere host authenticates against domain accounts.
+Authentication fails for local accounts with both the module and the PcAnywhere
+client. Not sure what's going on...
+
+NOTE: PcAnywhere allows only one connection at a time. Running multiple threads per target
+      may not work well.
+
+Available module options:
+  DOMAIN:?
+    Option allows manual setting of domain to check against when host uses NT authentication.
+
+Usage example: "-M pcanywhere -m DOMAIN:FOODOM"
+
+
+
+medusa -M pop3 -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+pop3.mod (2.0) JoMo-Kun <jmk@foofus.net> :: Brute force module for POP3 sessions
+The POP3 module tests accounts against the POP3 service.
+
+The module has a single option, MODE. If left unset, the default behavior is to check for either "+" or "-" in the server's response to see if the attempt was successful.
+
+
+If the server being tested in an AS/400, the module should be executed using the option -m MODE:AS400. This will result in the -ERR message being returned to be parsed for addition information. This is based on information gathered from the following document: Enumeration_of_AS400_users_via_pop3.pdf
+
+The module supports both POP3 (110/tcp) and POP3S (POP3 protocol over TLS/SSL) (995/tcp). In addition, it supports the POP3 STARTTLS extention, as defined in http://www.faqs.org/rfcs/rfc2595.html. Medusa will submit a "STLS" command to the target server. If a positive response is returned, a TLS session will be initiated.
+Available module options:
+  MODE:? (NORMAL, AS400) [optional]
+    Sets the mode for error detection.
+ AUTH:? (Authentication Type (USER/PLAIN/LOGIN/NTLM). Default: automatic)
+    Module will query service for accepted methods via an "AUTH" request.
+    USER (clear-text), SASL PLAIN, SASL LOGIN, and SASL NTLM authentication methods are supported.
+  DOMAIN:? [optional]
+    AUTH USER - Appends domain to username (e.g. user@domain.com).
+    AUTH NTLM - Supplies specified domain during NTLM authentication. The default
+                behaviour is to use the server supplied domain value.
+
+  Usage example:
+    "medusa -M pop3 -m MODE:AS400 -U accounts.txt -p password"
+    "medusa -M pop3 -m DOMAIN:foo.com -U accounts.txt -p password"
+
+
+
+medusa -M postgres -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+postgres.mod (2.0) JoMo-Kun <jmk@foofus.net> :: Brute force module for PostgreSQL sessions
+The postgres module tests accounts against the PostgreSQL service.
+
+This module requires the PostgreSQL library: libpq.
+
+The module has a single option, DB. This allows the user to specify the target database name. If the option is not set, the default behaviour is to use template1.
+
+Available module options:
+  DB:?
+    Sets target database name.
+
+  Usage example: "-M postgres -m DB:some_db"
+
+
+
+medusa -M rexec -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+rexec.mod (2.0) pMonkey <pmonkey@foofus.net> :: Brute force module for REXEC sessions
+
+
+
+medusa -M rlogin -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+rlogin.mod (2.0) pMonkey <pmonkey@foofus.net> :: Brute force module for RLOGIN sessions
+
+
+
+medusa -M rsh -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+rsh.mod (2.0) pMonkey <pmonkey@foofus.net> :: Brute force module for RSH sessions
+
+Rsh is a service where you either have .rhosts/hosts.equiv access
+from the source host or you don't. Passwords really don't matter.
+So the best way to use this module is with a single dummy password and a
+list of users you suspect may have .rhosts/hosts.equiv allows for your source.
+Good luck.
+
+
+
+medusa -M smbnt -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+smbnt.mod (2.1) JoMo-Kun <jmk@foofus.net> :: Brute force module for SMB (LM/NTLM/LMv2/NTLMv2) sessions
+
+Available module options:
+  GROUP:? (DOMAIN, LOCAL*, BOTH)
+    Option sets NetBIOS workgroup field.
+    DOMAIN: Check credentials against this hosts primary domain controller via this host.
+    LOCAL:  Check local account.
+    BOTH:   Check both. This leaves the workgroup field set blank and then attempts to check
+            the credentials against the host. If the account does not exist locally on the
+            host being tested, that host then queries its domain controller.
+  GROUP_OTHER:?
+    Option allows manual setting of domain to check against. Use instead of GROUP.
+  PASS:?  (PASSWORD*, HASH, MACHINE)
+    PASSWORD: Use normal password.
+    HASH:     Use a NTLM hash rather than a password.
+    MACHINE:  Use the machine's NetBIOS name as the password.
+  AUTH:?  (LM, NTLM, LMv2*, NTLMv2)
+    Option sets LAN Manager Authentication level.
+    LM:
+    NTLM:
+    LMv2:
+    NTLMv2:
+  NETBIOS
+    Force NetBIOS Mode (Disable Native Win2000 Mode). Win2000 mode is the default.
+    Default mode is to test TCP/445 using Native Win2000. If this fails, module will
+    fall back to TCP/139 using NetBIOS mode. To test only TCP/139, use the following:
+    medusa -M smbnt -m NETBIOS -n 139
+
+(*) Default value
+
+Usage examples:
+
+1: Normal boring check...
+    medusa -M smbnt -h somehost -u someuser -p somepassword
+
+2: Testing domain credentials against a client system...
+    medusa -M smbnt -h somehost -U users.txt -p password -m GROUP:DOMAIN
+
+3: Testing each credential from a PwDump file against the target's domain via the target...
+    medusa -M smbnt -h somehost -C pwdump.txt -m PASS:HASH -m GROUP:DOMAIN
+
+4: Testing each hash from a PwDump file against a specific user local to the target...
+    medusa -M smbnt -H hosts.txt -C pwdump.txt -u someuser -m PASS:HASH
+
+5: Testing an individual NTLM hash...
+    medusa -M smbnt -H hosts.txt -u administrator -p 92D887C8010492C2944E2DF489A880E4:7A2EDE4F51BC5A03984C6BA2C239CF63::: -m PASS:HASH
+
+Access level:
+
+This module performs both an SMB authentication request (Session Setup AndX) and a
+share connection request (Tree Connect AndX). The share connection request is for the
+default hidden administrative share ADMIN$. The goal is to identify if the credentials
+being tested have administrative rights to the target system. The following examples
+highlight how to interrupt the responses.
+
+  Valid administrative-level credentials: [SUCCESS (ADMIN$ - Access Allowed)]
+  Valid user-level credentials: [SUCCESS (ADMIN$ - Access Denied)]
+  Valid credentials, access level unknown: [SUCCESS (ADMIN$ - Share Unavailable)]
+
+The SMBNT module tests accounts against the Microsoft netbios-ssn (TCP/139) and microsoft-ds (TCP/445) services. Besides testing normal passwords, this module allows Medusa to directly test NTLM hashes against a Windows host. This may be useful for an auditor who has aquired a sam._ or pwdump file and would like to quickly determine which are valid entries. The SMBNT module natively supports the SMBv1 protocol. If built with libsmb2 support, it will automatically also test SMBv2/3 services and handle SMB signing.
+
+Several "-m 'METHOD:VALUE'" options can be used with this module. The following are valid methods: AUTH, GROUP, GROUP_OTHER, PASS and NETBIOS. The following values are useful for these methods:
+
+Method		Value		Description
+AUTH		LM		Force LMv1 authentication. Since LM hashes don't store character case information, this could potentially be used to improve our ability to identify more complex passwords. For example, if the user has a password of "paSsWoRD", the only way to determine that via NTLM is to submit a value of "paSsWoRD". With LM we can simply send "password". It may also be possible to modify Samba to only do LM, so that whole mixed-case password thing can be ignored.
+
+				Unfortunately, LM authentication is not without its problems. If a password attempt is reported as failed, it could mean one of at least three different things:
+
+				* The password is indeed wrong.
+				* No LM hash is stored for that account.
+				* The GPO Network Security: LAN Manager authentication level is set as one of the following:
+				- Send NTLMv2 response only\refuse LM (Level 4)
+				- Send NTLMv2 response only\refuse LM & NTLM (Level 5)
+
+				In both of the two later cases, the password may be correct, but we won't know it. I've found no remote and anonymous way of determining the LAN Manager authentication level. My assumption was that it'd be revealed during the protocol negotiation, but that doesn't seem to be the case.
+		NTLM*		The module will send only a NTLMv1 response. This method is the most tested option and the current default. It should work in the majority of cases, with the notable exception of when the GPO Network Security: LAN Manager authentication level is set to "Send NTLMv2 response only\refuse LM & NTLM (Level 5)".
+		LMv2		This option leverages the LMv2 response algorithm. The LMv2 response is used to provide pass-through authentication compatibility with older servers. The response is based on the NTLM password hash and is exactly 24 bytes. It appears that this method works against the majority of Microsoft Windows operating systems (e.g. NT 4, 2000, 2003, XP, Vista and 2008). It will likely become the default method in future releases.
+		NTLMv2		This option enforces the use of the NTLMv2 response algorithm. Support for this algorithm was added with Microsoft Windows with NT 4.0 SP4. It should be noted that the method doesn't currently work with Microsoft Vista. While NTLMv2 authentication with Samba and Windows 2003 functions as expected, Vista systems respond with the oh-so-helpful "INVALID_PARAMETER" error code. LMv2 authentication is recommended in cases where LM and NTLM are refused.
+GROUP		LOCAL*		Check local account.
+		DOMAIN		Check credentials against this hosts primary domain controller via this host.
+		BOTH		Check both. This leaves the workgroup field set blank and then attempts to check the credentials against the host. If the account does not exist locally on the host being tested, that host then queries its domain controller.
+GROUP_OTHER	[user specified]	Configure arbitrary domain for host to authenticate against.
+PASS		PASSWORD*	Use a normal password.
+		HASH		Use a LM or NTLM hash rather than a password.
+		MACHINE		Use the Machine's NetBIOS name as the password.
+NETBIOS				Force NetBIOS Mode (Disable Native Win2000 Mode)
+  (*) Default value
+
+The following examples demonstrate several uses of the SMBNT module:
+
+	The default behavior is to test NATIVE Win2000 mode via TCP/445. If this connection fails, NETBIOS mode is checked on TCP/139. The following shows how to force the module into NETBIOS module.
+
+	% medusa -h 192.168.0.20 -u administrator -e ns -M smbnt -m NETBIOS -n 139 
+	Medusa v1.0-rc1 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks
+
+	ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password:  (1/2)
+	ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password: administrator (2/2)
+
+The following example shows how to force to module to set a domain value other than either "localhost" or the system's default domain. This can be useful when testing trust relationships between domains.
+
+	% medusa -h 192.168.0.20 -u foo -p bar -M smbnt -m GROUP_OTHER:FOODOM
+	Medusa v1.0-rc1 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks 
+
+	ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: foo (1/1) Password: bar (1/1)
+This example demonstrates one way that PwDump output could be used with Medusa. Each user and their respective NTLM hash within the pwdump.txt file will be tested against the hosts listed in hosts.txt.
+
+	% medusa -H hosts.txt -C pwdump.txt -M smbnt -m PASS:HASH
+
+	Medusa v1.0-rc1 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks
+
+	ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/10) User: Administrator (1/3) Password: 92D887C8010492C2944E2DF489A880E4:7A2EDE4F51BC5A03984C6BA2C239CF63::: (1/1)
+	ACCOUNT FOUND: [smbnt] Host: 192.168.0.20 User: Administrator Password: 92D887C8010492C2944E2DF489A880E4:7A2EDE4F51BC5A03984C6BA2C239CF63::: [SUCCESS]
+	ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/10) User: bar (2/3) Password: 49D58563113416EBAAD3B435B51404EE:AA3AFE73B6E0C2D87B3A428BF696AE71::: (1/1)
+	ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/10) User: foo (3/3) Password: 92D887C8010492C2944E2DF489A880E4:7A2EDE4F51BC5A03984C6BA2C239CF63::: (1/1)
+	ACCOUNT FOUND: [smbnt] Host: 192.168.0.20 User: foo Password: 92D887C8010492C2944E2DF489A880E4:7A2EDE4F51BC5A03984C6BA2C239CF63::: [SUCCESS]
+	< snip >
+It should be noted that once a valid hash is located, it is often not necessary to "crack" the password in order to use it. Using a modified SAMBA client, the hash can just be "passed" directly. See this page for a SAMBA patch and several examples.
+Be careful of mass domain account lockout with this module. For example, assume you are checking several accounts against many domain workstations. If you are using either the "GROUP:DOMAIN" or the "GROUP:BOTH" option and these accounts do not exist locally on the workstations, each workstation will in turn check their respective domain controller. This could cause a bunch of lockouts. Of course, it'd look like the workstations, not you, were doing it. ;)
+
+FYI, this code is unable to test accounts on default XP hosts which are not part of a domain and do not have normal file sharing enabled. Default XP does not allow shares and returns STATUS_LOGON_FAILED for both valid and invalid credentials. XP with simple sharing enabled returns SUCCESS for both valid and invalid credentials. If anyone knows a way to test in these configurations...
+
+The following is a basic speed test performed against several virtual machines. The test utilized a 5000 entry dictionary with the correct value at line 4998. The cell value reflects the observed average number of password attempts per second.
+
+TARGET OS/AUTH LEVEL	2000		XP		2003		Vista		2008
+LM			345.1 t/s	796.1 t/s	125.6 t/s	655 t/s*	379.3 t/s*
+NTLM			357.1 t/s	821.0 t/s	140.6 t/s	546.2 t/s	373.2 t/s
+LMv2			338.2 t/s	801.1 t/s	164.5 t/s	637.3 t/s	371.9 t/s
+NTLMv2			364.1 t/s	812.2 t/s	165.4 t/s	-	-
+
+* Did not find password in LM mode, since no LM hash is stored in default install of Vista/2008.
+- Authentication failed with "INVALID_PARAMETER" response.
+
+A potential timing-based attack was also observed during testing with 2008. It takes roughly 13 seconds to check 5000 passwords against a valid account. It takes only about 6 seconds to test the same number against a non-existant account.
+
+
+medusa -M smtp-vrfy -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+smtp-vrfy.mod (2.1) JoMo-Kun <jmk@foofus.net> :: Brute force module for verifying SMTP accounts (VRFY/EXPN/RCPT TO)
+The SMTP-VRFY module can be used to enumerate which accounts are valid on a mail server. The module sends the following:
+
+EHLO some_name
+VRFY account@domain
+
+The module expects the accounts to be checked to be supplied via the user options (-u/-U/-C). The domain should be supplied as if it were a password. The value sent via the EHLO command can be set using the -m EHLO: module option. The default is to send MEDUSA.
+
+This module was written while testing a single mis-configured SMTP SPAM filter. Other devices probably behave differently. Some tweaking of the module may be required.
+
+Available module options:
+ HELO [optional]
+    Use HELO command. Default: EHLO
+ HELODOMAIN:? [optional]
+    Specify the HELO/EHLO domain. Default: server.domain
+ MAILFROM:? [optional]
+    Specify the MAIL FROM address. Default: doesnotexist@foofus.net
+ VERB:? (Verb/Command: VRFY/EXPN/RCPT TO. Default: RCPT TO
+
+*** NOTE: Target address domain should be specified within password field. ***
+
+  Usage example:
+    "medusa -M smtp-vrfy -m VERB:VRFY -U accounts.txt -p domain.com"
+
+
+
+medusa -M smtp -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+smtp.mod (2.0) pmonkey@foofus.net :: Brute force module for SMTP Authentication with TLS
+
+Available module options:
+ EHLO:? [optional]
+    Specify the EHLO greeting.
+ AUTH:? (Authentication Type (PLAIN/LOGIN/NTLM). Default: automatic)
+    Module will query service for accepted methods via an "AUTH" request.
+    PLAIN, LOGIN, and NTLM authentication methods are supported.
+  DOMAIN:? [optional]
+
+The DOMAIN option should supply the specified domain appropriately,
+regardless of authentication type. The domain can also be supplied
+via the username field, but the format appears to differ by auth type.
+
+  Usage example:
+    "medusa -M smtp -m AUTH:NTLM -U accounts.txt -p password"
+    "medusa -M smtp -m EHLO:world -U accounts.txt -p password"
+
+
+
+medusa -M snmp -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+snmp.mod (2.1) JoMo-Kun <jmk@foofus.net> :: Brute force module for SNMP Community Strings
+The SNMP module tests community strings against the Simple Network Management Protocol (SNMP) service.
+
+The module has several options: TIMEOUT, VERSION and ACCESS. The default values are 2 seconds, version 1 and READ access. It should be noted that when testing for WRITE capability, the module will read the current value of sysLocation and then write that same value back to the system.
+
+Since SNMP is a UDP-based protocol, there is no handshaking between sending and receiving transport-layer entities. Due to this connectionless communication, about the only time we know a SNMP service exists, is if we send the correct community string and the server sends a response. All other queries result in no response whatsoever. The approach we use here is to initially just send all of our SNMP GET requests. After that completes, we wait TIMEOUT seconds for any responses. If we get any responses back, we examine them to see which community strings were successful. If ACCESS:WRITE was specified, we check for write access on each of the previously successful values. This techique should allow for quick brute forcing. However, one should take care with the TIMEOUT and SEND_DELAY values as to avoid causing issues with the target service or missing response data.
+
+Available module options:
+  TIMEOUT:?
+    Sets the number of seconds to wait for the UDP responses (default: 5 sec).
+  SEND_DELAY:?
+    Sets the number of microseconds to wait between sending queries (default: 200 usec).
+  VERSION:? (1*, 2C)
+    Set the SNMP client version.
+  ACCESS:? (READ*, WRITE)
+    Set level of access to test for with the community string.
+
+(*) Default value
+
+It should be noted that when testing for WRITE capability, the module will read
+the current value of sysLocation and then write that same value back to the system.
+
+Since SNMP is a UDP-based protocol, there is no handshaking between sending and
+receiving transport-layer entities. Due to this connectionless communication, about
+the only time we know a SNMP service exists, is if we send the correct community
+string and the server sends a response. All other queries result in no response
+whatsoever. The approach we use here is to initially just send all of our SNMP GET
+requests. After that completes, we wait TIMEOUT seconds for any responses. If we
+get any responses back, we examine them to see which community strings were successful.
+If ACCESS:WRITE was specified, we check for write access on each of the previously
+successful values. This techique should allow for quick brute forcing. However, one
+should take care with the TIMEOUT and SEND_DELAY values as to avoid causing issues
+with the target service or missing response data.
+
+  Usage example: "-M snmp -m TIMEOUT:2 -m ACCESS:WRITE"
+
+
+
+medusa -M ssh -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+ssh.mod (2.1) JoMo-Kun <jmk@foofus.net> :: Brute force module for SSH v2 sessions
+The SSH module tests accounts against SSH service using SSH version 2. The module currently supports brute-forcing SSH Keyboard-interactive and Password authentication modes.
+
+This module requires libssh2 (www.libssh2.org). This is NOT the same as libssh (0xbadc0de.be). It should be noted that the libssh2 library, and therefor, the Medusa SSH module only supports brute-forcing servers which can talk SSH version 2. Libssh2 does not have support for v1 and it looks likely that it never will.
+
+The module has a single option, BANNER. If it's not obvious, this allows you to set the client banner sent during an authentication test. The default value is "SSH-2.0-MEDUSA".
+
+Some notes regarding libssh2... Using the stock libssh2 library, it is likely that the user will encounter hung module threads when running Medusa. This problem is due to libssh2's libssh2_session_startup() not always returning. The cause of this hang within libssh2, I believe, stems from the SSH servers being tested getting pissed and not sending back a banner. The default behavior for OpenSSH is to allow only 10 unauthenticated connections and ignore everything else. While we weren't always running 10 threads in our tests, our threads may have been hitting it faster than it could clean up the previous connections...
+
+This issue has been dealt with in two ways:
+
+libssh2 waits forever for the ssh server to respond with a banner. This causes our threads to wait forever, which kinda blows. I've added a patch to libssh2 in the /misc directory which causes it to count to 1000 and then stop waiting. This minor patch has been submitted to the libssh2 folks and a fix will hopefully be included in a future release.
+We now loop around the libssh2_session_startup() call. This function will fail if libssh2 was unable to negotiate a SSH session. We give it 5 shots to pass and sleep a user configurable time between each. If we fail after 5 attempts, we display that this happened and identify the host/user/pass combination that was not tested.
+** As of libssh2 0.18 (devel), this issue appears to be resolved. **
+
+It should be noted that while you can run many threads of SSH, more is not always better. As you increase past 10, you will notice the module having to retry the startup() function.
+
+Available module options:
+  BANNER:? (Libssh client banner. Default SSH-2.0-MEDUSA.)
+
+Usage example: "-M ssh -m BANNER:SSH-2.0-FOOBAR"
+
+
+
+ medusa -M svn -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+svn.mod (2.1) JoMo-Kun <jmk@foofus.net> :: Brute force module for Subversion sessions
+The SVN module tests accounts against the Subversion (SVN) service.
+
+This module requires the svn_client-1 library to be installed. This should have been installed as part of Subversion.
+
+The module has a single option, BRANCH. This allows the user to specify the target SVN URL. For example, svn://host/branch. If the option is not set, the default behaviour is to use trunk.
+
+Available module options:
+  BRANCH:?
+    Sets URL branch to authenticate against. For example, svn://host/branch.
+
+  Usage example: "-M svn -m BRANCH:test_project"
+
+
+
+medusa -M telnet -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+telnet.mod (2.0) fizzgig <fizzgig@foofus.net> :: Brute force module for telnet sessions
+
+The TELNET module tests accounts against the TELNET service. This module supports both telnet (23) and telnets (992).
+
+The module currently has a single option, MODE. MODE can either be NORMAL (default) or AS400. The AS400 mode supports basic AS/400 tn5250 connections. This approach allows for more descriptive error messages than FTP when testing against an AS/400. However, POP3, if available on the AS/400, is still a better brute-force option.
+
+The Telnet module will output to the log file hosts that were found to only have a password prompt. This may be useful when scanning for use, or lack of, AAA.
+
+Available module options:
+  MODE:? (NORMAL, AS400) [optional]
+    Sets the mode for error detection.
+
+  Usage example: "-M telnet -m MODE:AS400 -U accounts.txt -p password"
+
+
+
+medusa -M vmauthd -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+vmauthd.mod (2.0) JoMo-Kun <jmk@foofus.net> :: Brute force module for the VMware Authentication Daemon
+
+
+The VMware Authentication Daemon listens on TCP port 902 and may or may not
+require a SSL-encrypted connection. This module connects to the service using
+non-SSL and will automatically switch to SSL if required.
+
+
+
+medusa -M vnc -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+vnc.mod (2.1) JoMo-Kun <jmk@foofus.net> :: Brute force module for VNC sessions
+The VNC module tests accounts against the VNC service.
+
+This module was developed using both RealVNC and UltraVNC, which support rudimentary anti-brute force functionality. RealVNC, for example, allows 5 failed attempts and then enforces a 10 second delay. For each subsequent attempt that delay is doubled. UltraVNC appears to allow 6 invalid attempts and then forces a 10 second delay between each following attempt. This module attempts to identify these situations and react appropriately by invoking sleep(). The user can set a sleep limit when brute forcing RealVNC using the MAXSLEEP parameter. Once this value has been reached, the module will exit.
+
+Available module options:
+  MAXSLEEP:?
+    Sets the maximum allowed sleep time when the VNC RealVNC anti-brute force delay
+    is encountered. This value is in seconds and, if left unset, defaults to 60.
+  DOMAIN:?
+    Sets the domain value when authenticating against UltraVNC's MS-Logon feature.
+
+Some versions of VNC have built-in anti-brute force functionality. RealVNC, for example,
+allows 5 failed attempts and then enforces a 10 second delay. For each subsequent
+attempt that delay is doubled. UltraVNC appears to allow 6 invalid attempts and then forces
+a 10 second delay between each following attempt. This module attempts to identify these
+situations and react appropriately by invoking sleep(). The user can set a sleep limit when
+brute forcing RealVNC using the MAXSLEEP parameter. Once this value has been reached, the
+module will exit.
+
+It should be noted that this module currently supports password-less and password-only VNC
+servers. In addition, it supports UltraVNC's MS-Logon feature that can be used to provide
+pass-through authentication against local and domain Windows accounts. In the case of basic
+password-only VNC, provide any arbitrary username value.
+
+Usage example: "-M vnc -m MAXSLEEP:120 -m DOMAIN:FOOFUSDOM"
+
+
+
+ medusa -M web-form -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+web-form.mod (2.1) Luciano Bello <luciano@linux.org.ar> :: Brute force module for web forms
+Basic web form brute force module which handles GET/POST requests. Supports customizable submit parameters and server response text.
+
+Available module options:
+  USER-AGENT:?       User-agent value. Default: "I'm not Mozilla, I'm Ming Mong".
+  FORM:?             Target form to request. Default: "/"
+  DENY-SIGNAL:?      Authentication failure message. Attempt flagged as successful if text is not present in
+                     server response. Default: "Login incorrect"
+  CUSTOM-HEADER:?    Custom HTTP header.
+                     More headers can be defined by using this option several times.
+  FORM-DATA:<METHOD>?<FIELDS>
+                     Methods and fields to send to web service. Valid methods are GET and POST. The actual form
+                     data to be submitted should also be defined here. Specifically, the fields: username and
+                     password. The username field must be the first, followed by the password field.
+                     Default: "post?username=&password="
+
+Usage example: "-M web-form -m USER-AGENT:"g3rg3 gerg" -m FORM:"webmail/index.php" -m DENY-SIGNAL:"deny!"
+                 -m FORM-DATA:"post?user=&pass=&submit=True" -m CUSTOM-HEADER:"Cookie: name=value"
+
+
+
+medusa -M wrapper -q
+Medusa v2.2 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <jmk@foofus.net>
+
+wrapper.mod (2.0) JoMo-Kun <jmk@foofus.net> :: Generic Wrapper Module
+The purpose of the wrapper module is to allow the user to execute arbitrary scripts while taking advantage of Medusa managing hosts/users/passwords. Two sample scripts have been included in the wrapper directory.
+
+This is a work in progress... The module currently uses fork() which isn't ideal. Not sure if I can kick off a thread and redirect STDIN/STDOUT for just that thread...
+
+The initial goal for this module was to test RDP servers using rdesktop. A patch to rdesktop 1.4.1 has been included in the /misc/rdesktop directory. This extends the dictionary patch from cqure.net to work with the Medusa wrapper STDIN method. It should be noted that rdesktop doesn't appear to be able to use command-line passwords when connecting to Windows 2000 hosts. Windows 2003 and XP worked fine during testing.
+
+The following example shows one way to use rdesktop with the wrapper module:
+
+medusa -M wrapper -m TYPE:STDIN -m PROG:rdesktop -m ARGS:"-u %U -p - %H" -H hosts.txt -U users.txt -P passwords.txt
+
+One possible method for hiding the graphical output from rdesktop:
+% Xvfb :97 -ac -nolisten tcp &
+% export DISPLAY=:97
+
+Available module options:
+  TYPE:? (SINGLE, STDIN)
+    Option sets type of script being called by module. See included sample scripts
+    for ideas how to use this module.
+
+    SINGLE: Script expects all user input comes from original command line.
+    STDIN:  Host and user information passed to script via command line.
+            Passwords to test are passed via STDIN to script.
+
+  PROG:?
+    Option for setting path to executable file.
+
+  ARGS:?
+    Option for setting executable parameters. The following substitutions can be used:
+    %H:  Replaced with target IP address.
+    %U:  Replaced with username to test.
+    %P:  Replaced with password to test.
+
+Usage example: '-M wrapper -m TYPE:SINGLE -m PROG:./foo.pl -m ARGS:"-h %H -u %U -p %P"'
+Usage example: '-M wrapper -m TYPE:STDIN  -m PROG:./bar.pl -m ARGS:"--host %H --user %U"'
+
+
+
+The following command instructs Medusa to test all passwords listed in passwords.txt against a single user (administrator) on the host 192.168.0.20 via the SMB service. The "-e ns" instructs Medusa to additionally check if the administrator account has either a blank password or has its password set to match its username (administrator).
+
+% medusa -h 192.168.0.20 -u administrator -P passwords.txt -e ns -M smbnt
+
+Medusa v1.0-rc1 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks
+
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password:  (1/7)
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password: administrator (2/7)
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password: password (3/7)
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password: pass1 (4/7)
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password: pass2 (5/7)
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password: pass3 (6/7)
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password: pass4 (7/7)
+
+The below command-line demonstrates how to execute some of the parallel features of Medusa. Here at least 20 hosts and 10 users are tested concurrently. The "-L" options instructs Medusa to parallelize by user. This means each of the 10 threads targeting a host checks a unique user.
+
+% medusa -H hosts.txt -U users.txt -P passwords.txt -T 20 -t 10 -L -F -M smbnt
+
+Medusa allows host/username/password data to also be set using a "combo" file. The combo file can be specified using the "-C" option. The file should contain one entry per line and have the values colon separated in the format host:user:password. If any of the three fields are left empty, the respective information should be provided either as a global value or as a list in a file. Medusa will perform a basic parameter check based on the contents of the first line in the file.
+The following combinations are possible in the combo file:
+
+host:username:password
+host:username:
+host::
+:username:password
+:username:
+::password
+host::password
+The following example will check each entry in the file combo.txt
+% medusa -M smbnt -C combo.txt
+
+The combo.txt file:
+192.168.0.20:administrator:password
+192.168.0.20:testuser:pass
+192.168.0.30:administrator:blah
+192.168.0.40:user1:foopass
+
+The following example will check each entry in the file combo.txt against the targets listed in hosts.txt
+% medusa -M smbnt -C combo.txt -H hosts.txt
+
+The combo.txt file:
+:administrator:password
+:testuser:pass
+:administrator:blah
+:user1:foopass
+
+Medusa also supports using PwDump files as a combo file. The format of these files should be user:id:lm:ntlm:::. We look for ':::' at the end of the first line to determine if the file contains PwDump output.
+
+Resume a Medusa scan. Medusa has the ability to resume a scan which was interrupted with a SIGINT signal (e.g. CTRL-C). For example:
+Test interrupted with SIGINT
+% ../medusa -M ssh -H host.txt -U users.txt -p password
+Medusa v2.0 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks
+
+ACCOUNT CHECK: [ssh] Host: 192.168.0.1 (1 of 11, 0 complete) User: foo (1 of 4, 0 complete) Password: password (1 of 1 complete)
+ACCOUNT CHECK: [ssh] Host: 192.168.0.1 (1 of 11, 0 complete) User: administrator (2 of 4, 1 complete) Password: password (1 of 1 complete)
+ACCOUNT CHECK: [ssh] Host: 192.168.0.1 (1 of 11, 0 complete) User: jmk (3 of 4, 2 complete) Password: password (1 of 1 complete)
+ACCOUNT CHECK: [ssh] Host: 192.168.0.1 (1 of 11, 0 complete) User: bar (4 of 4, 3 complete) Password: password (1 of 1 complete)
+ACCOUNT CHECK: [ssh] Host: 192.168.0.11 (2 of 11, 1 complete) User: foo (1 of 4, 0 complete) Password: password (1 of 1 complete)
+ACCOUNT CHECK: [ssh] Host: 192.168.0.11 (2 of 11, 1 complete) User: administrator (2 of 4, 1 complete) Password: password (1 of 1 complete)
+ALERT: Medusa received SIGINT - Sending notification to login threads that we are are aborting.
+ACCOUNT CHECK: [ssh] Host: 192.168.0.11 (2 of 11, 1 complete) User: jmk (3 of 4, 2 complete) Password: password (1 of 1 complete)
+ALERT: To resume scan, add the following to your original command: "-Z h2u3u4h3."
+
+Interrupted scan being resumed
+% ../medusa -M ssh -H host.txt -U users.txt -p password -Z h2u3u4h3.
+Medusa v2.0 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks
+
+ACCOUNT CHECK: [ssh] Host: 192.168.0.11 (2 of 11, 0 complete) User: jmk (3 of 4, 0 complete) Password: password (1 of 1 complete)
+ACCOUNT CHECK: [ssh] Host: 192.168.0.11 (2 of 11, 0 complete) User: bar (4 of 4, 1 complete) Password: password (1 of 1 complete)
+ACCOUNT CHECK: [ssh] Host: 192.168.0.15 (3 of 11, 1 complete) User: foo (1 of 4, 0 complete) Password: password (1 of 1 complete)
+
+The following is a brief discription of the resume map:
+h2u3u4h3.
++--------- First host which was not 100% completed
+  +------- First user for host which was not 100% completed
+    +----- First user for host which was not started
+      +--- First host which was not started
+        +- Map ending mark
