@@ -1,0 +1,5 @@
+Date: 2024-06-12
+----------------------------------------
+  06:25:49 - Action: ifconfig
+             Command: ifconfig | grep -E '^[a-zA-Z0-9]+:' -A 1 | grep -oP '^[a-zA-Z0-9]+|(?<=inet )[^ ]+' | paste -d' ' - -
+
