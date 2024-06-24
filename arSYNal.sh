@@ -7,7 +7,7 @@ scanners_options=("Ping Sweep" "Nmap Scans" "Enumeration" "Back")
 enum_scans_options=("DNS" "File System" "Web" "Back" "Main Menu")
 enum_web_options=("GoBuster" "DirB" "FFuF" "wFuzz" "Back" "Main Menu")
 enum_dns_options=("Dig" "DNSenum" "DNSrecon" "DNSmap" "theHarvester" "Back" "Main Menu")
-enum_file_options=("DotDotPwn" "Back" "Main Menu")
+enum_file_options=("DotDotPwn" "SearchSploit" "Back" "Main Menu")
 nmap_scans_options=("Basic Scans" "Advanced Scans" "Scripted Scans" "Total Nmap Scan" "Back" "Main Menu")
 ###### Nmap Menu
 basic_scan_submenu_options=("Basic Nmap Scan" "Service Version Detection" "Fast Nmap Scan" "TCP Nmap Scan" "TCP ACK Nmap Scan" "UDP Nmap Scan" "Active Host Network Nmap Scan" "Back" "Main Menu")
@@ -364,7 +364,7 @@ footer() {
         printf "${BLUE} █  █$(printf ' %.0s' {1..78}) █  █${NC}\n"
     done
 
-    printf "${BLUE} █  ▓$(printf ' %.0s' {1..78}) ▓  █${NC}\n"
+    printf "${BLUE} █  ▓  ${NC}${RED}[m|M] = Main Menu [q|Q] = Quit${NC}${BLUE}$(printf ' %.0s' {1..46}) ▓  █${NC}\n"
     printf "${BLUE} ▓  ▒$(printf ' %.0s' {1..5}) ┌──────∙·     ·∙──────┐$(printf ' %.0s' {1..49}) ▒  ▓${NC}\n"
     printf "${BLUE} ▒  ▒$(printf ' %.0s' {1..5}) │■${NC} ${RED}[⇧/⇩]  +  [Enter]${NC} ${BLUE}■│${NC}    %b%*s${BLUE} ▒  ▒${NC}\n" "$info_box" $((45 - ${#clean_info_box})) ""
     printf "${BLUE} ▒  ░$(printf ' %.0s' {1..5}) └┬──────∙·   ·∙──────┬┘ $(printf ' %.0s' {1..18})┌──────∙·      ·∙──────┐       ░  ▒${NC}\n"
@@ -442,8 +442,7 @@ results() {
             fi
             printf "${BLUE}   ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ ${NC}\n"
 
-            
-            # Navigation for specific menu 
+            # Navigation for specific menu
             if [ $current_page -lt $total_pages ]; then
                 echo -e "\n${START} ${RED}Press any key to go to the next page, \"Q|q\" to exit.${NC} ${END}"
 
@@ -604,6 +603,7 @@ cheatsheets() {
         current_page=$((current_page + 1))
         if [ "$current_page" -le "$total_pages" ]; then
             echo -e "\n${START} ${RED}Press any key to go to the next page, \"Q|q\" to exit.${NC} ${END}"
+            
             read -rsn1 quit
             if [[ $quit == 'q' || $quit == 'Q' ]]; then
                 clear
@@ -818,6 +818,9 @@ display_menu() {
             "DotDotPwn")
                 info_box="${START} ${RED}DotDotPwn scan${NC} ${END}"
                 ;;
+            "SearchSploit")
+                info_box="${START} ${RED}SearchSploit${NC} ${END}"
+                ;;
             ###### Nmap Scans main scanners/nmap scan
             "Basic Scans")
                 info_box="${START} ${RED}Basic Nmap scans${NC} ${END}"
@@ -971,14 +974,19 @@ handle_input() {
             clear
             display_menu
             return
-        elif [ "$current_menu" = "main" ]; then
+        else 
             echo -ne '\033[?25h'
             clear
             exit 0
         fi
         ;;
-        
-    
+    "M" | "m")
+        current_menu="main"
+        selected_index=0
+        menu_box="   Main Menu"
+        results=""
+        ;;
+
     "") # Enter key
         case $current_menu in
         "main")
@@ -1403,6 +1411,9 @@ perform_action_enum_file() {
     "DotDotPwn")
         perform_dotdotpwn
         ;;
+    "SearchSploit")
+        perform_searchsploit
+        ;;
     "Back")
         current_menu="enum_scans" # Go back to the Scanners submenu
         selected_index=0
@@ -1510,7 +1521,6 @@ perform_action_cheatsheets() {
         selected_cheatsheet="${cheatsheets_options[selected_index]}"
         if [ "$selected_cheatsheet" != "Back" ] && [ "$selected_cheatsheet" != "Next Page" ] && [ "$selected_cheatsheet" != "Previous Page" ]; then
             cheatsheet_path="./$cheatsheets_directory/$selected_cheatsheet"
-            log_debug "$cheatsheet_path"
             cheatsheets "$cheatsheet_path"
         fi
         ;;
@@ -1914,9 +1924,9 @@ perform_gobuster() {
             target="$target:$port"
         fi
         # Read wordlist path
-        read -p "Enter the wordlist path (e.g. wordlists/combined_directories.txt)[Enter for default]: " wordlist
+        read -p "Enter the wordlist path (e.g. /usr/share/wordlists/seclists/Discovery/Web-Content/combined_directories.txt)[Enter for default]: " wordlist
         if [ -z "$wordlist" ]; then
-            wordlist="wordlists/combined_directories.txt"
+            wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/combined_directories.txt"
         else
             wordlist="$wordlist"
 
@@ -1942,9 +1952,9 @@ perform_gobuster() {
             target="$target:$port"
         fi
         # Read wordlist path
-        read -p "Enter the wordlist path (e.g. wordlists/combined_subdomains.txt)[Enter for default]: " wordlist
+        read -p "Enter the wordlist path (e.g. /usr/share/wordlists/seclists/Discovery/DNS/combined_subdomains.txt)[Enter for default]: " wordlist
         if [ -z "$wordlist" ]; then
-            wordlist="wordlists/combined_subdomains.txt"
+            wordlist="/usr/share/wordlists/seclists/Discovery/DNS/combined_subdomains.txt"
         else
             wordlist="$wordlist"
 
@@ -1962,9 +1972,9 @@ perform_gobuster() {
             target="$target:$port"
         fi
         # Read wordlist path
-        read -p "Enter the wordlist path (e.g. wordlists/combined_subdomains.txt)[Enter for default]: " wordlist
+        read -p "Enter the wordlist path (e.g. /usr/share/wordlists/seclists/Discovery/DNS/combined_subdomains.txt)[Enter for default]: " wordlist
         if [ -z "$wordlist" ]; then
-            wordlist="wordlists/combined_subdomains.txt"
+            wordlist="/usr/share/wordlists/seclists/Discovery/DNS/combined_subdomains.txt"
         else
             wordlist="$wordlist"
 
@@ -1995,9 +2005,9 @@ perform_dirb() {
         target="$target:$port"
     fi
 
-    read -p "Enter the wordlist path (e.g. wordlists/combined_directories.txt)[Enter for default]: " wordlist
+    read -p "Enter the wordlist path (e.g. /usr/share/wordlists/seclists/Discovery/Web-Content/combined_directories.txt)[Enter for default]: " wordlist
     if [ -z "$wordlist" ]; then
-        wordlist="wordlists/combined_directories.txt"
+        wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/combined_directories.txt"
     else
         wordlist="$wordlist"
 
@@ -2021,7 +2031,7 @@ perform_dirb() {
     log_action "$previous_command"
 
     results
-    
+
 }
 # Function to perform ffuf
 perform_ffuf() {
@@ -2044,16 +2054,16 @@ perform_ffuf() {
         # Read wordlist path
         read -p "Enter the type of fuzz to perform (e.g. [1] directory, [2] file): " type
         if [ "$type" = "1" ]; then
-            read -p "Enter path to wordlist (default = wordlists/combined_directories.txt): " wordlist
+            read -p "Enter path to wordlist (default = /usr/share/wordlists/seclists/Discovery/Web-Content/combined_directories.txt): " wordlist
             if [ -z "$wordlist" ]; then
-                wordlist="wordlists/combined_directories.txt"
+                wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/combined_directories.txt"
             else
                 wordlist="$wordlist"
             fi
         else
-            read -p "Enter path to wordlist (default = wordlists/raft_large_files.txt): " wordlist
+            read -p "Enter path to wordlist (default = /usr/share/wordlists/seclists/Discovery/Web-Content/raft_large_files.txt): " wordlist
             if [ -z "$wordlist" ]; then
-                wordlist="wordlists/raft_large_files.txt"
+                wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/raft_large_files.txt"
             else
                 wordlist="$wordlist"
             fi
@@ -2083,9 +2093,9 @@ perform_ffuf() {
             target="FUZZ.$target:$port"
         fi
         # Read wordlist path
-        read -p "Enter the wordlist path (e.g. wordlists/combined_subdomains.txt)[Enter for default]: " wordlist
+        read -p "Enter the wordlist path (e.g. /usr/share/wordlists/seclists/Discovery/DNS/combined_subdomains.txt)[Enter for default]: " wordlist
         if [ -z "$wordlist" ]; then
-            wordlist="wordlists/combined_subdomains.txt"
+            wordlist="/usr/share/wordlists/seclists/Discovery/DNS/combined_subdomains.txt"
         else
             wordlist="$wordlist"
         fi
@@ -2104,9 +2114,11 @@ perform_ffuf() {
         # Read wordlist path
         read -p "Enter fuzzing type (e.g. [1] FUZZ=value1 or [2] param1=FUZZ): " wordlist
         if [ "$wordlist" = "1" ]; then
-            wordlist="wordlists/burp-parameter-names.txt"
+            echo "Using seclists burp-parameter-names wordlist"
+            wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt"
         elif [ "$wordlist" = "2" ]; then
-            wordlist="wordlists/combined_words.txt"
+            echo " Using seclists combined_words wordlist"
+            wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/combined_words.txt"
         fi
         results=$(ffuf -u "$target" -w "$wordlist" -mc 200 -ac -t 50)
         previous_command="ffuf -u $target -w $wordlist -mc 200 -ac -t 50"
@@ -2136,16 +2148,16 @@ perform_wfuzz() {
         fi
         read -p "Enter the type of fuzz to perform (e.g. [1] directory, [2] file): " type
         if [ "$type" = "1" ]; then
-            read -p "Enter path to Directory wordlist (default = wordlists/combined_directories.txt): " wordlist
+            read -p "Enter path to Directory wordlist (default = /usr/share/wordlists/seclists/Discovery/Web-Content/combined_directories.txt): " wordlist
             if [ -z "$wordlist" ]; then
-                wordlist="wordlists/combined_directories.txt"
+                wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/combined_directories.txt"
             else
                 wordlist="$wordlist"
             fi
         else
-            read -p "Enter path to File name wordlist (default = wordlists/raft_large_files.txt): " wordlist
+            read -p "Enter path to File name wordlist (default = /usr/share/wordlists/seclists/Discovery/Web-Content/raft_large_files.txt): " wordlist
             if [ -z "$wordlist" ]; then
-                wordlist="wordlists/raft_large_files.txt"
+                wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/raft_large_files.txt"
             else
                 wordlist="$wordlist"
             fi
@@ -2169,9 +2181,9 @@ perform_wfuzz() {
         else
             target="FUZZ.$target:$port"
         fi
-        read -p "Enter path to wordlist (default = wordlists/combined_subdomains.txt): " wordlist
+        read -p "Enter path to wordlist (default = /usr/share/wordlists/seclists/Discovery/DNS/combined_subdomains.txt): " wordlist
         if [ -z "$wordlist" ]; then
-            wordlist="wordlists/combined_subdomains.txt"
+            wordlist="/usr/share/wordlists/seclists/Discovery/DNS/combined_subdomains.txt"
         else
             wordlist="$wordlist"
         fi
@@ -2196,9 +2208,11 @@ perform_wfuzz() {
         fi
         read -p "Enter fuzzing type (e.g. [1] FUZZ=value1 or [2] param1=FUZZ): " wordlist
         if [ "$wordlist" = "1" ]; then
-            wordlist="wordlists/burp-parameter-names.txt"
+            echo "Using seclists burp-parameter-names wordlist"
+            wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt"
         elif [ "$wordlist" = "2" ]; then
-            wordlist="wordlists/combined_words.txt"
+            echo "Using seclists combined_words wordlist"
+            wordlist="/usr/share/wordlists/seclists/Discovery/Web-Content/combined_words.txt"
         fi
         read -p "Select HTTP response codes to show (default = 200 or 200,301,401 etc..): " code
         if [ -z "$code" ]; then
@@ -2221,11 +2235,11 @@ perform_wfuzz() {
         fi
         read -p "Enter injection type (e.g. [1] SQL [2] XSS [3] LFI): " wordlist
         if [ "$wordlist" = "1" ]; then
-            wordlist="wordlists/Generic-SQLi.txt"
+            wordlist="/usr/share/wordlists/seclists/Fuzzing/SQLi/Generic-SQLi.txt"
         elif [ "$wordlist" = "2" ]; then
-            wordlist="wordlists/XSS-Cheat-Sheet-PortSwigger.txt"
+            wordlist="/usr/share/wordlists/seclists/Fuzzing/XSS/human-friendly/XSS-Cheat-Sheet-PortSwigger.txt"
         elif [ "$wordlist" = "3" ]; then
-            wordlist="wordlists/LFI-LFISuite-pathtotest-huge.txt"
+            wordlist="/usr/share/wordlists/seclists/Fuzzing/LFI/LFI-LFISuite-pathtotest-huge.txt"
         fi
         read -p "Select HTTP response codes to show (default = 200 or 200,301,401 etc..): " code
         if [ -z "$code" ]; then
@@ -2345,9 +2359,9 @@ perform_dns_recon() {
     elif [ "$mode" = "6" ]; then
         echo "This will take some time!"
         read -p "Enter the target domain: " target
-        read -p "Enter the wordlist path (default: wordlists/all.txt) enter for default: " wordlist
+        read -p "Enter the wordlist path (default: /usr/share/wordlists/amass/all.txt) enter for default: " wordlist
         if [ -z "$wordlist" ]; then
-            wordlist="wordlists/all.txt"
+            wordlist="/usr/share/wordlists/amass/all.txt"
         else
             wordlist="$wordlist"
 
@@ -2377,9 +2391,9 @@ perform_dns_map() {
         results=$(dnsmap -d "$target")
         previous_command="dnsmap -d $target"
     elif [ "$mode" = "2" ]; then
-        read -p "Enter the wordlist path (default: wordlists/all.txt) enter for default: " wordlist
+        read -p "Enter the wordlist path (default: /usr/share/wordlists/amass/all.txt) enter for default: " wordlist
         if [ -z "$wordlist" ]; then
-            wordlist="wordlists/all.txt"
+            wordlist="/usr/share/wordlists/amass/all.txt"
         else
             wordlist="$wordlist"
 
@@ -2558,6 +2572,61 @@ perform_dotdotpwn() {
     log_action "$previous_command"
     results
 }
+# function to perform SearchSploit
+
+perform_searchsploit() {
+    results=""
+    desc="SearchSploit is a command-line tool included in the Exploit Database package, which is available on Kali Linux and other security-focused distributions. It allows users to search through the Exploit Database (Exploit-DB) for known vulnerabilities and exploits."
+    show_description "searchsploit"
+
+    read -p "Enter the mode to use [1] Search for exploit, [2] View exploit details, [3] Move exploit to home directory, [4] Update SearchSploit Database " mode
+
+    case $mode in
+        "1")
+            read -p "Enter the exploit term to search for: " target
+            results=$(searchsploit "$target" --id)
+            previous_command="searchsploit $target --id"
+            ;;
+        "2")
+            read -p "Enter the ID of the exploit to view details: " exploit_id
+            if [ -n "$exploit_id" ]; then
+                results=$(searchsploit -x "$exploit_id")
+                previous_command="searchsploit -x $exploit_id"
+            else
+                echo "No ID entered. Exiting."
+                return
+            fi
+            ;;
+        "3")
+            read -p "Enter the ID of the exploit to copy: " exploit_id
+            if [ -n "$exploit_path" ]; then
+                results=$(searchsploit -m "$exploit_id")
+                previous_command="searchsploit -m $exploit_id"
+                echo "Exploit copied to current working directory."
+            else
+                echo "Error occured, Exiting."
+                return
+            fi
+            ;;
+        "4")
+            read -p "Do you want to update the exploit database? (y/n): " update_choice
+            if [ "$update_choice" == "y" ]; then
+                echo "Updating the exploit database..."
+                searchsploit -u
+                echo "Exploit database updated."
+            else
+                echo "Exploit database not updated."
+            fi
+            ;;
+        "*")
+            echo "Invalid mode selected. Exiting."
+            return
+            ;;
+    esac
+
+    log_action "$previous_command"
+    results
+}
 
 ############################ Network tools
 #Function to perform ifconfig
@@ -2624,11 +2693,8 @@ perform_geo() {
     results=$(curl https://api.hackertarget.com/ipgeo/?q=$ip && echo "")
     previous_command="curl https://api.hackertarget.com/ipgeo/?q=$ip"
     log_action "$previous_command"
-    results
-    view=false
+    results    view=false
 }
-
-
 ############################ VulnerabilityMmenu
 # Function to perform Nikto scan
 perform_nikto_scan() {
@@ -2782,7 +2848,7 @@ perform_john_the_ripper() {
         read -p "Enter hash to crack: " hash
         read -p "Enter hash format (choose from the above list i.e. raw-md5): " format
         echo "$hash" >hashes/pwd.txt
-        results=$(john --session="$session" hashes/pwd.txt --format="$format" &)
+        results=$(john --session="$session" hashes/pwd.txt --format="$format")
         previous_command="john --session=$session --format=$format hashes/pwd.txt"
 
     # Mode 2: Crack with a wordlist
@@ -2794,12 +2860,28 @@ perform_john_the_ripper() {
         read -p "Enter hash to crack: " hash
         read -p "Enter hash format (choose from the above list i.e. raw-md5): " format
         echo "$hash" >hashes/pwd.txt
-        read -p "Enter path to wordlist (default = wordlists/rockyou.txt): " wordlist
+        read -p "Enter path to wordlist (default = /usr/share/wordlists/rockyou.txt): " wordlist
         if [ -z "$wordlist" ]; then
-            wordlist="wordlists/rockyou.txt"
-        else
-            wordlist="$wordlist"
+            wordlist="/usr/share/wordlists/rockyou.txt"
+            if [ ! -f "$wordlist" ] && [ -f "/usr/share/wordlists/rockyou.txt.gz" ]; then
+                echo "rockyou.txt not found, but rockyou.txt.gz exists. Unzipping..."
+                sudo gunzip "/usr/share/wordlists/rockyou.txt.gz"
 
+                if [ -f "$wordlist" ]; then
+                    echo "Unzipping successful. rockyou.txt is now available."
+                else
+                    echo "Error: Unzipping failed. rockyou.txt is still not available."
+                    exit 1
+                fi
+            elif [ ! -f "$wordlist" ] && [ ! -f "/usr/share/wordlists/rockyou.txt.gz" ]; then
+                echo "Error: Wordlist not found at $wordlist or /usr/share/wordlists/rockyou.txt.gz"
+                exit 1
+            fi
+        else
+            if [ ! -f "$wordlist" ]; then
+                echo "Error: Wordlist not found at $wordlist"
+                exit 1
+            fi
         fi
         results=$(john --session="$session" --wordlist="$wordlist" --format="$format" hashes/pwd.txt)
         previous_command="john --session=$session --wordlist=$wordlist --format=$format hashes/pwd.txt"
@@ -2861,6 +2943,8 @@ perform_john_the_ripper() {
     fi
     log_action "$previous_command"
     results
+    results=$(john --show --format="$format" hashes/pwd.txt)
+    results
 }
 
 # Function to perform Hashcat password cracking
@@ -2875,13 +2959,31 @@ perform_hashcat() {
     read -p "Enter the password file to crack: " password_file
     read -p "Enter hash type: " mode
     read -p "Enter attack vector: (i.e. [0] straight, [1] combo, [3] brute-force, [6] hybrid wordlist + mask, [7] hybrid mask + wordlist, [9] association ): " attack
-    read -p "Enter wordlist path (default = wordlists/rockyou.txt): " wordlist
+    read -p "Enter path to wordlist (default = /usr/share/wordlists/rockyou.txt): " wordlist
     if [ -z "$wordlist" ]; then
-        wordlist="wordlists/rockyou.txt"
+        wordlist="/usr/share/wordlists/rockyou.txt"
+        if [ ! -f "$wordlist" ] && [ -f "/usr/share/wordlists/rockyou.txt.gz" ]; then
+            echo "rockyou.txt not found, but rockyou.txt.gz exists. Unzipping..."
+            sudo gunzip "/usr/share/wordlists/rockyou.txt.gz"
+
+            if [ -f "$wordlist" ]; then
+                echo "Unzipping successful. rockyou.txt is now available."
+            else
+                echo "Error: Unzipping failed. rockyou.txt is still not available."
+                exit 1
+            fi
+        elif [ ! -f "$wordlist" ] && [ ! -f "/usr/share/wordlists/rockyou.txt.gz" ]; then
+            echo "Error: Wordlist not found at $wordlist or /usr/share/wordlists/rockyou.txt.gz"
+            exit 1
+        fi
     else
-        wordlist="$wordlist"
+        if [ ! -f "$wordlist" ]; then
+            echo "Error: Wordlist not found at $wordlist"
+            exit 1
+        fi
     fi
     results=$(hashcat -m "$mode" -a "$attack" "$password_file" "$wordlist")
+
     previous_command="hashcat -m $mode -a $attack  $password_file $wordlist"
     log_action "$previous_command"
     results
@@ -3619,11 +3721,11 @@ perform_cewl() {
     read -p "Enter url to create wordlist from (i.e. www.example.com): " target
     read -p "Minimum word length (default = 5): " min
     if [ -z "$min" ]; then
-    min=5
+        min=5
     fi
     read -p "Spider Depth (default = 2): " depth
     if [ -z "$depth" ]; then
-    depth=2
+        depth=2
     fi
     read -p "Enter a name to save the CeWL list as: " name
     cewl "$target" -m "$min" -d "$depth" -w "wordlists/$name.txt"
@@ -3848,7 +3950,7 @@ perform_weather() {
 ############################ Workers
 splash() {
     keyword="$1"
-    file="wordlists/splash.txt"
+    file="splash.txt"
     found=false
 
     # Check if the file exists
