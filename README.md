@@ -34,5 +34,22 @@
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/ltham79/arsynal.git
-cd arsynal
+git clone https://github.com/ltham79/arSYNal.git
+cd arSYNal
+chmod +x arSYNal.sh
+```
+##Usage
+
+Execute the script:
+
+```bash
+./arsynal.sh
+```
+
+Follow the on-screen prompts to navigate through the various tool options, save results, and enjoy the fun zone activities.
+
+Contributing
+Contributions are welcome! Please feel free to submit issues and pull requests.
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
