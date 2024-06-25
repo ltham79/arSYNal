@@ -5,6 +5,8 @@
 ![GitHub stars](https://img.shields.io/github/stars/ltham79/arsynal?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/ltham79/arsynal?style=social)
 
+<a href="https://www.buymeacoffee.com/psiber_syn" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 ## Description
 
 **arSYNal** is a comprehensive Bash script designed as a walk-through for numerous cybersecurity tools available in the default Kali Linux installation. It assists both professionals and amateurs in conducting various penetration testing and security analysis tasks by guiding users through the options for each tool. 
