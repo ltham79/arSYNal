@@ -7,7 +7,7 @@
 ![GitHub stars](https://img.shields.io/github/stars/ltham79/arsynal?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/ltham79/arsynal?style=social)
 </br>
-<img src="https://komarev.com/ghpvc/?username=your-github-username&style=flat-square&color=blue" alt=""/>
+<img src="https://komarev.com/ghpvc/?username=ltham79&style=flat-square&color=blue" alt=""/>
 
 <a href="https://www.buymeacoffee.com/psiber_syn" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
