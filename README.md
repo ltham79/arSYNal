@@ -38,7 +38,7 @@ git clone https://github.com/ltham79/arSYNal.git
 cd arSYNal
 chmod +x arSYNal.sh
 ```
-##Usage
+## Usage
 
 Execute the script:
 
@@ -48,8 +48,8 @@ Execute the script:
 
 Follow the on-screen prompts to navigate through the various tool options, save results, and enjoy the fun zone activities.
 
-Contributing
+## Contributing
 Contributions are welcome! Please feel free to submit issues and pull requests.
 
-License
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
