@@ -1,45 +1,38 @@
-fping
+# arSYNal
 
-ffuf
+![GitHub repo size](https://img.shields.io/github/repo-size/ltham79/arsynal)
+![GitHub contributors](https://img.shields.io/github/contributors/ltham79/arsynal)
+![GitHub stars](https://img.shields.io/github/stars/ltham79/arsynal?style=social)
+![GitHub forks](https://img.shields.io/github/forks/ltham79/arsynal?style=social)
 
-wFuzz
+## Description
 
-SQLMap
+**arSYNal** is a comprehensive Bash script designed as a walk-through for numerous cybersecurity tools available in the default Kali Linux installation. It assists both professionals and amateurs in conducting various penetration testing and security analysis tasks by guiding users through the options for each tool. 
 
-WPScan
+## Features
 
-DirB
+- **Graphical Menu**: ASCII art graphical menu navigated using arrow keys.
+- **Tool Integration**: Supports tools such as `nmap` (various `nmap` scans including NSE scripts for XSS, LFI, and SQL vulnerabilities.), `searchsploit`, `sqlmap`, `dnsrecon`, `dig`, `dnsenum`, `hydra`, `medusa`, `john the ripper`, `fping`, `nikto`, `hashcat`, `cewl`, `dotdotpwn`, `theharvester`, `dnsmap`, `gobuster`, `dirb`, `wpscan`, `wfuzz`, `ffuf`, and hash identifier.
+- **Command Log**: Logs all executed commands for review and auditing.
+- **Result Saving**: Ability to save scan results and view them later.
+- **User Script Support**: Allows users to add custom scripts and integrate them into the menu simply by dropping them in the scripts directory and arSYNal will populate the menu for you.
+- **Cheatsheet Collection**: Extensive collection of cheatsheets for various tools can add your own .tx or .pdf cheatsheets by adding them to the cheatsheets directory and arSYNal will populate the menu for you.
+- **Fun Zone**: Includes fun animations and activities to keep users engaged.
+- **Paginated Display**: Paginate saved results and cheatsheets in an ASCII graphical frame.
+- **Network Utilities**: Easily manage `/etc/hosts` file, perform GeoIP lookups, and run a condensed output of ifconfig
 
-NMAP
+## Screenshots / GIFs
 
-GoBuster
+![Main Menu](#)
+*Add a screenshot or GIF of the main menu here.*
 
-Nikto
+![Tool Options](#)
+*Add a screenshot or GIF showing the tool options here.*
 
-Dig
+## Installation
 
-DNSrecon
+### Clone the Repository
 
-DNSenum
-
-DNSmap
-
-theHarvester
-
-dotdotPwn
-
-John The Ripper
-
-Haydra
-
-Medusa
-
-SearchSploit
-
-cewl
-
-HashID
-
-HashCat
-
-AXoLOTL
+```bash
+git clone https://github.com/ltham79/arsynal.git
+cd arsynal

@@ -19,7 +19,8 @@ vuln_scanning_options=("Nikto Scan" "SQLmap" "WPScan" "Back")
 password_cracking_options=("John the Ripper" "Hashcat" "Hydra" "Medusa" "CeWL" "Hash-ID" "Back")
 ###### Network menu
 network_tools_options=("ifconfig" "Hosts file" "geoIP" "Back")
-fun_zone_options=("Joker Bomb" "Matrix" "Clock" "Tetris" "Weather Man" "ASCII STAR WARS" "Back")
+fun_zone_options=("Joker Bomb" "Matrix" "Clock" "Tetris" "Weather Man" "ASCII STAR WARS" "Install Tools" "Back")
+tools=(nmap searchsploit sqlmap dnsrecon dig dnsenum hydra medusa john fping nikto hashcat cewl dotdotpwn theharvester dnsmap gobuster dirb wpscan wfuzz ffuf hash-identifier)
 
 # Initialize variables
 selected_index=0
@@ -895,6 +896,9 @@ display_menu() {
             "ASCII STAR WARS")
                 info_box="${START} ${RED}Watch ASCII Star Wars${NC} ${END}"
                 ;;
+            "Install Tools")
+                info_box="${START} ${RED}Install required tools${NC} ${END}"
+                ;;
             "Back")
                 if [ "$current_menu" = "nmap_scans" ]; then
                     info_box="${START} ${RED}Back to Scanners ${NC} ${END}"
@@ -1612,6 +1616,9 @@ perform_action_fun_zone() {
     "ASCII STAR WARS")
         clear
         telnet towel.blinkenlights.nl
+        ;;
+    "Install Tools")
+        install_tools
         ;;
     "Back")
         enter_submenu
@@ -3948,6 +3955,18 @@ perform_weather() {
 ############################ End Fun Zone
 
 ############################ Workers
+# Function to install missing tools
+install_tools() {
+    for tool in "${tools[@]}"; do
+        if ! command -v $tool &>/dev/null; then
+            echo "$tool is not installed. Installing..."
+            sudo apt-get install -y $tool
+        else
+            echo "$tool is already installed."
+        fi
+    done
+    sleep 5
+}
 splash() {
     keyword="$1"
     file="splash.txt"
