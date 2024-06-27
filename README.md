@@ -1,5 +1,5 @@
 <div align="center">
-  ![Splash](https://github.com/ltham79/arSYNal/assets/139496887/b7a6d84c-db89-4b19-b280-6d6a51acd6de)
+  <img src="https://github.com/ltham79/arSYNal/assets/139496887/b7a6d84c-db89-4b19-b280-6d6a51acd6de" width="85%" height="85%">
 
 # arSYNal
 
