@@ -1,5 +1,6 @@
 <div align="center">
-  
+  ![Splash](https://github.com/ltham79/arSYNal/assets/139496887/b7a6d84c-db89-4b19-b280-6d6a51acd6de)
+
 # arSYNal
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/ltham79/arsynal)
