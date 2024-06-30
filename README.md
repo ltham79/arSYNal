@@ -3,10 +3,10 @@
 
 # arSYNal
 
-![GitHub repo size](https://img.shields.io/github/repo-size/ltham79/arsynal)
-![GitHub contributors](https://img.shields.io/github/contributors/ltham79/arsynal)
-![GitHub stars](https://img.shields.io/github/stars/ltham79/arsynal?style=social)
-![GitHub forks](https://img.shields.io/github/forks/ltham79/arsynal?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/ltham79/arSYNal)
+![GitHub contributors](https://img.shields.io/github/contributors/ltham79/arSYNal)
+![GitHub stars](https://img.shields.io/github/stars/ltham79/arSYNal?style=social)
+![GitHub forks](https://img.shields.io/github/forks/ltham79/arSYNal?style=social)
 </br>
 <img src="https://komarev.com/ghpvc/?username=ltham79&style=flat-square&color=blue" alt=""/>
 
