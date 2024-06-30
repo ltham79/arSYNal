@@ -25,7 +25,7 @@
 - **Command Log**: Logs all executed commands for review and auditing.
 - **Result Saving**: Ability to save scan results and view them later.
 - **User Script Support**: Allows users to add custom scripts and integrate them into the menu simply by dropping them in the scripts directory and arSYNal will populate the menu for you.
-- **Cheatsheet Collection**: Extensive collection of cheatsheets for various tools can add your own .tx or .pdf cheatsheets by adding them to the cheatsheets directory and arSYNal will populate the menu for you.
+- **Cheatsheet Collection**: Extensive collection of cheatsheets for various tools can add your own .txt or .pdf cheatsheets by adding them to the cheatsheets directory and arSYNal will populate the menu for you.
 - **Fun Zone**: Includes fun animations and activities to keep users engaged.
 - **Paginated Display**: Paginate saved results and cheatsheets in an ASCII graphical frame.
 - **Network Utilities**: Easily manage `/etc/hosts` file, perform GeoIP lookups, and run a condensed output of ifconfig
