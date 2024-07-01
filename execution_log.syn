@@ -3,3 +3,40 @@ Date: 2024-06-12
   06:25:49 - Action: ifconfig
              Command: ifconfig | grep -E '^[a-zA-Z0-9]+:' -A 1 | grep -oP '^[a-zA-Z0-9]+|(?<=inet )[^ ]+' | paste -d' ' - -
 
+Date: 2024-06-28
+----------------------------------------
+  07:17:02 - Action: nmap basic scan
+             Command: nmap 127.0.0.1
+
+  07:17:21 - Action: nmap basic scan
+             Command: nmap 127.0.0.1
+
+Date: 2024-06-30
+----------------------------------------
+  23:26:54 - Action: ifconfig
+             Command: ifconfig | grep -E '^[a-zA-Z0-9]+:' -A 1 | grep -oP '^[a-zA-Z0-9]+|(?<=inet )[^ ]+' | paste -d' ' - -
+
+  23:27:03 - Action: ifconfig
+             Command: ifconfig | grep -E '^[a-zA-Z0-9]+:' -A 1 | grep -oP '^[a-zA-Z0-9]+|(?<=inet )[^ ]+' | paste -d' ' - -
+
+  23:28:03 - Action: nmap basic scan
+             Command: nmap 127.0.0.1
+
+  23:28:18 - Action: nmap basic scan
+             Command: nmap 127.0.0.1
+
+  23:28:55 - Action: nmap basic scan
+             Command: nmap 127.0.0.1
+
+  23:29:07 - Action: nmap basic scan
+             Command: nmap 127.0.0.1
+
+  23:30:59 - Action: nmap basic scan
+             Command: nmap 127.0.0.1
+
+  23:31:43 - Action: nmap basic scan
+             Command: nmap 127.0.0.1
+
+  23:31:53 - Action: nmap basic scan
+             Command: nmap 127.0.0.1
+

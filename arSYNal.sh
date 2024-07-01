@@ -988,6 +988,7 @@ handle_input() {
         current_menu="main"
         selected_index=0
         menu_box="   Main Menu"
+        page_index=0
         results=""
         ;;
 
@@ -3743,7 +3744,7 @@ perform_cewl() {
 
 }
 
-# Function to for hash identifier
+# Function to perform hash identifier
 perform_hash_id() {
     results=""
     desc="Hash-ID is a command-line tool available in Kali Linux that helps identify the type of hash algorithm used to generate a given hash. This tool is handy for penetration testers, security analysts, and ethical hackers when they encounter a hash and need to determine which algorithm was used to create it.
@@ -4069,6 +4070,7 @@ handle_save_results() {
 
 banner() {
     clear
+    echo -ne '\033[?25l'
     splash "syn"
     echo
     echo
