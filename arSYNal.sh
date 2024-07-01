@@ -37,16 +37,6 @@ cheatsheets_options=()
 previous_command=""
 previous_datestamp=$(date +"%Y-%m-%d")
 
-# Define an array of directories
-DIRECTORIES=("hashes" "results")
-
-# Loop through each directory in the array
-for DIRECTORY in "${DIRECTORIES[@]}"; do
-  # Create directory if it doesn't exist
-  if [ ! -d "$DIRECTORY" ]; then
-    mkdir "$DIRECTORY"
-    
-  fi
 
 # Define ANSI color codes
 RED='\e[31m'
