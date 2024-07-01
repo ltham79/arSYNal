@@ -33,10 +33,12 @@
 ## Screenshots / GIFs
 
 ![Main Menu](#)
-*Add a screenshot or GIF of the main menu here.*
+<img src="https://github.com/ltham79/arSYNal/assets/139496887/0f2d083b-d17f-418d-8f18-4fa0c8a193c0" width="85%" height="25%">
+
 
 ![Tool Options](#)
 *Add a screenshot or GIF showing the tool options here.*
+![Action](https://github.com/ltham79/arSYNal/assets/139496887/e49ebc60-80ec-49b5-9c43-f2ee84f50d01)
 
 ## Installation
 
@@ -56,6 +58,7 @@ Execute the script:
 ```
 
 Follow the on-screen prompts to navigate through the various tool options, save results, and enjoy the fun zone activities.
+![Cheat](https://github.com/ltham79/arSYNal/assets/139496887/97d67278-754d-4a23-92b9-35fd4ce9a62c)
 
 ## Contributing
 Contributions are welcome! Please feel free to submit issues and pull requests.
