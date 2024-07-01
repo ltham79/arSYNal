@@ -30,15 +30,16 @@
 - **Paginated Display**: Paginate saved results and cheatsheets in an ASCII graphical frame.
 - **Network Utilities**: Easily manage `/etc/hosts` file, perform GeoIP lookups, and run a condensed output of ifconfig
 
-## Screenshots / GIFs
 
-![Main Menu](#)
-<img src="https://github.com/ltham79/arSYNal/assets/139496887/0f2d083b-d17f-418d-8f18-4fa0c8a193c0" width="85%" height="25%">
+## Main Menu
+<img src="https://github.com/ltham79/arSYNal/assets/139496887/0f2d083b-d17f-418d-8f18-4fa0c8a193c0" width="55%" height="auto">
 
 
-![Tool Options](#)
-*Add a screenshot or GIF showing the tool options here.*
-![Action](https://github.com/ltham79/arSYNal/assets/139496887/e49ebc60-80ec-49b5-9c43-f2ee84f50d01)
+## Action
+<img src="https://github.com/ltham79/arSYNal/assets/139496887/e49ebc60-80ec-49b5-9c43-f2ee84f50d01" width="55%" height="auto%">
+
+## Cheatsheets 
+<img src="https://github.com/ltham79/arSYNal/assets/139496887/97d67278-754d-4a23-92b9-35fd4ce9a62c" width="55%" height="auto">
 
 ## Installation
 
@@ -54,11 +55,28 @@ chmod +x arSYNal.sh
 Execute the script:
 
 ```bash
-./arsynal.sh
+./arSYNal.sh
+# or
+./arSYNal.sh --noshow
+# to not show the banner
 ```
 
+## Dependancies
+
+Use the install tools menu option to make surw all of the tools required to function properly are installed.
+
+
 Follow the on-screen prompts to navigate through the various tool options, save results, and enjoy the fun zone activities.
-![Cheat](https://github.com/ltham79/arSYNal/assets/139496887/97d67278-754d-4a23-92b9-35fd4ce9a62c)
+
+## Issues
+This is only my second project with bash scripting so it probably is not the best looking script or the best way to complete some tasks but I got everything to work the only way I could figure out. So please be gentle with the criticism.
+
+Also the only major issues are that I can not get the screen flicker to stop when navigating the menu. If anyone can help I would be gladly appreciative. And sometimes it does not show the results the first time. If this happens save the results and then open them from the saved results menu option.
+
+If any other issues are found please let me know.
+
+Thank you
+Psiber_Syn
 
 ## Contributing
 Contributions are welcome! Please feel free to submit issues and pull requests.
