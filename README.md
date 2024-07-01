@@ -32,7 +32,7 @@
 
 
 ## Main Menu
-<img src="https://github.com/ltham79/arSYNal/assets/139496887/0f2d083b-d17f-418d-8f18-4fa0c8a193c0" width="55%" height="auto">
+<img src="https://github.com/ltham79/arSYNal/assets/139496887/0f2d083b-d17f-418d-8f18-4fa0c8a193c0" width="55%" height="85%">
 
 
 ## Action
@@ -75,11 +75,12 @@ Also the only major issues are that I can not get the screen flicker to stop whe
 
 If any other issues are found please let me know.
 
-Thank you
-Psiber_Syn
+Thank you,
+
+Psiber_Syn (lthambric@gmail.com)
 
 ## Contributing
-Contributions are welcome! Please feel free to submit issues and pull requests.
+Contributions are welcome! Please feel free to submit issues and pull requests. All code written by Psiber_Syn. The tools used are credited to their respected creators.
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
