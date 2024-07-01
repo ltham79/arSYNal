@@ -63,7 +63,7 @@ Execute the script:
 
 ## Dependancies
 
-Use the install tools menu option to make surw all of the tools required to function properly are installed.
+Use the install tools menu option to make sure all of the tools required to function properly are installed.
 
 
 Follow the on-screen prompts to navigate through the various tool options, save results, and enjoy the fun zone activities.
