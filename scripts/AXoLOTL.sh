@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Created by Psiber_Syn
 # Function to display colored error box
 show_error() {
     local message="$1"

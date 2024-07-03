@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Tetris Game
-# Modified By Psiber_Syn
+# Modified By Psiber_Syn 
 
 #APP declaration
 APP_NAME="${0##*[\\/]}"
