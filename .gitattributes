@@ -1,0 +1,11 @@
+# Set default behavior for all files
+* text=auto
+
+# Specify LF line endings for specific file types
+*.sh text eol=lf
+*.js text eol=lf
+*.py text eol=lf
+
+# Specify CRLF line endings for specific file types
+*.bat text eol=crlf
+*.cmd text eol=crlf
