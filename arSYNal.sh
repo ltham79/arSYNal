@@ -487,6 +487,7 @@ results() {
 
 # Cheatsheet display
 cheatsheets() {
+    view=true
     file="$1"
     line_length=109
     page_size=20
@@ -608,6 +609,7 @@ cheatsheets() {
             
             read -rsn1 quit
             if [[ $quit == 'q' || $quit == 'Q' ]]; then
+                view=false
                 clear
                 display_menu
                 return 0
@@ -615,6 +617,7 @@ cheatsheets() {
         else
             echo -e "\n${START} ${RED}End of file reached, press any key to go back to menu.${NC} ${END}"
             read -rsn1 input
+            view=false
         fi
     done
 
@@ -975,9 +978,10 @@ handle_input() {
         fi
         ;;
     "Q" | "q")
-        if [ "$current_menu" = "cheatsheets" ]; then
+        if [ "$view" = "true" ]; then
             clear
             display_menu
+            view=false
             return
         else 
             echo -ne '\033[?25h'
